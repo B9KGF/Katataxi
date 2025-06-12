@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Υπολογισμός Στρατιωτικής Θητείας - Ελληνικός Στρατός</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #0d3b66, #1a5a8f);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            margin-top: 20px;
+            margin-bottom: 40px;
+        }
+        header {
+            background: linear-gradient(to right, #0d3b66, #1a5a8f);
+            color: white;
+            padding: 25px 30px;
+            text-align: center;
+            position: relative;
+            border-bottom: 5px solid #d4af37;
+        }
+        header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+        .badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #e74c3c;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        .form-container {
+            padding: 25px;
+        }
+        .section {
+            margin-bottom: 25px;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+        }
+        .section-header {
+            background: #f8f9fa;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            font-weight: 600;
+            border-bottom: 1px solid #e0e0e0;
+            transition: background 0.3s;
+        }
+        .section-header:hover {
+            background: #edf2f7;
+        }
+        .section-header i {
+            margin-right: 12px;
+            color: #0d3b66;
+            transition: transform 0.3s;
+        }
+        .section-content {
+            padding: 20px;
+            background: white;
+            display: none;
+        }
+        .section.active .section-content {
+            display: block;
+        }
+        .section.active .section-header i {
+            transform: rotate(90deg);
+        }
+        .form-group {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .form-group:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        .form-group label {
+            display: flex;
+            align-items: flex-start;
+            cursor: pointer;
+            font-size: 1rem;
+            line-height: 1.5;
+            padding: 8px 5px;
+            border-radius: 5px;
+            transition: background 0.2s;
+        }
+        .form-group label:hover {
+            background: #f8f9fa;
+        }
+        .form-group input[type="checkbox"],
+        .form-group input[type="radio"] {
+            margin-right: 12px;
+            margin-top: 5px;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+        .form-group input[type="number"] {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            width: 80px;
+            margin-left: 10px;
+            font-size: 1rem;
+        }
+        .sub-group {
+            margin-left: 28px;
+            margin-top: 15px;
+            padding-left: 15px;
+            border-left: 3px solid #0d3b66;
+        }
+        .button-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 15px;
+        }
+        .calculate-btn {
+            background: linear-gradient(to right, #0d3b66, #1a5a8f);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(13, 59, 102, 0.3);
+        }
+        .clear-btn {
+            background: linear-gradient(to right, #6c757d, #5a6268);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3);
+        }
+        .calculate-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(13, 59, 102, 0.4);
+            background: linear-gradient(to right, #1a5a8f, #0d3b66);
+        }
+        .clear-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(108, 117, 125, 0.4);
+            background: linear-gradient(to right, #5a6268, #6c757d);
+        }
+        .calculate-btn:active, .clear-btn:active {
+            transform: translateY(0);
+        }
+        #result {
+            background: #e9f7ef;
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 30px;
+            display: none;
+            border-left: 5px solid #2ecc71;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        #result h2 {
+            color: #27ae60;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 2px solid #27ae60;
+            padding-bottom: 10px;
+        }
+        .service-type {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #0d3b66;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            border: 2px solid #0d3b66;
+        }
+        .documents-list {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+        }
+        .documents-list h3 {
+            color: #0d3b66;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .documents-list ul {
+            list-style-type: none;
+            padding-left: 10px;
+        }
+        .documents-list li {
+            padding: 10px 0;
+            padding-left: 30px;
+            position: relative;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 1.05rem;
+        }
+        .documents-list li:last-child {
+            border-bottom: none;
+        }
+        .documents-list li:before {
+            content: "•";
+            color: #0d3b66;
+            font-weight: bold;
+            font-size: 1.5rem;
+            position: absolute;
+            left: 10px;
+            top: 5px;
+        }
+        .highlight {
+            background: #fff9e6;
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+            color: #d35400;
+        }
+        .error-highlight {
+            background: #f8d7da;
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+            color: #721c24;
+        }
+        #familyCertInfoBox { /* New style for the info box */
+            display: none; /* Hidden by default */
+        }
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            border-radius: 0 8px 8px 0;
+            margin: 20px 0;
+            font-size: 0.95rem;
+            display: flex;
+            gap: 10px;
+        }
+        .info-box i {
+            color: #2196f3;
+            font-size: 1.2rem;
+            min-width: 24px;
+        }
+        footer {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.7);
+            padding: 20px;
+            font-size: 0.9rem;
+            margin-top: auto;
+            width: 100%;
+        }
+        .disclaimer {
+            background: #f8f9fa;
+            border-top: 1px solid #e0e0e0;
+            padding: 15px;
+            text-align: center;
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 20px;
+            border-radius: 0 0 15px 15px;
+        }
+        .age-input {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        @media (max-width: 600px) {
+            .container {
+                margin: 10px;
+            }
+            header {
+                padding: 20px 15px;
+            }
+            header h1 {
+                font-size: 1.5rem;
+            }
+            .form-container {
+                padding: 15px;
+            }
+            .calculate-btn, .clear-btn {
+                padding: 12px 30px;
+                font-size: 1rem;
+                width: 100%;
+                justify-content: center;
+            }
+            .button-container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="badge">v1.2</div>
+            <h1><i class="fas fa-shield-alt"></i> Υπολογισμός Στρατιωτικής Θητείας</h1>
+            <p>Συμπληρώστε τις πληροφορίες σας για να μάθετε τον τύπο θητείας και τα απαιτούμενα έγγραφα</p>
+        </header>
+        <div class="form-container">
+            <div class="section active">
+                <div class="section-header">
+                    <i class="fas fa-user"></i>
+                    <span>Προσωπικά Στοιχεία</span>
+                </div>
+                <div class="section-content">
+                    <div class="form-group">
+                        <div class="age-input">
+                            <label for="age">Ηλικία:</label>
+                            <input type="number" id="age" min="18" max="100" value="18">
+                        </div>
+                    </div>
+                    <div id="easternBlockGroup" style="display: none;">
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="easternBlock">
+                                Προέρχομαι από χώρα του πρώην ανατολικού μπλοκ
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="over35">
+                            Είμαι 35 ετών και απέκτησα ελληνική ιθαγένεια
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="foreignResident">
+                            Είμαι κάτοικος εξωτερικού (εργασία 11+ έτη ή γεννημένος και διαμονή 7+ έτη στο εξωτερικό)
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="buyout">
+                            Σκοπεύω να εξαγοράσω τη θητεία μου
+                        </label>
+                        <div id="buyoutWarning" class="error-highlight" style="margin-top: 10px; display: none; padding: 8px; border-radius: 5px;">
+                            Δεν έχετε δικαίωμα εξαγοράς θητείας λόγω ηλικίας (απαιτείται ηλικία 33 ετών και άνω)
+                        </div>
+                        <div id="buyoutDaysServedGroup" class="sub-group" style="display: none; margin-top: 15px;">
+                            <label for="daysServed" style="display: flex; flex-direction: column; align-items: start;">
+                                <span>Πόσες ημέρες θα υπηρετήσετε;</span>
+                                <span style="font-size: 0.9em; color: #555;">Ελάχιστο: 20 ημέρες</span>
+                                <span style="font-size: 0.9em; color: #555;">Στρατιωτικός μήνας: 30 ημέρες</span>
+                                <input type="number" id="daysServed" min="20" value="20">
+                            </label>
+                            <div id="daysServedWarning" class="error-highlight" style="margin-top: 5px; display: none; padding: 8px; border-radius: 5px;">
+                                Οι ημέρες που θα υπηρετήσετε πρέπει να είναι τουλάχιστον 20.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="section">
+                <div class="section-header">
+                    <i class="fas fa-users"></i>
+                    <span>Οικογενειακή Κατάσταση</span>
+                </div>
+                <div class="section-content">
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="hasSiblings">
+                            Έχω αδέλφια
+                        </label>
+                        <div class="sub-group" id="siblingsGroup">
+                            <label>
+                                Αριθμός ζωντανών αδελφών: <input type="number" id="siblingsCount" min="0" value="0">
+                            </label>
+                        </div>
+                    </div>
+                    <!-- NEW PARENT STATUS GROUP (Always visible) -->
+                    <div class="form-group">
+                        <p style="font-weight: 600; margin-bottom: 10px;">Κατάσταση Γονέων:</p>
+                        <label>
+                            <input type="checkbox" id="marriedParents">
+                            Παντρεμένοι γονείς
+                        </label>
+                        <label>
+                            <input type="checkbox" id="divorcedParents">
+                            Διαζευγμένοι γονείς
+                        </label>
+                        <label>
+                            <input type="checkbox" id="singleMother">
+                            Είμαι γιος άγαμης μητέρας
+                        </label>
+                        <label>
+                            <input type="checkbox" id="bothParentsDead">
+                            Και οι δύο γονείς έχουν πεθάνει
+                        </label>
+                        <label>
+                            <input type="checkbox" id="bothParentsDisabled">
+                            Και οι δύο γονείς έχουν ≥67% αναπηρία
+                        </label>
+                        <label>
+                            <input type="checkbox" id="oneParentDead">
+                            Ένας γονέας έχει πεθάνει
+                        </label>
+                        <label>
+                            <input type="checkbox" id="oneParentDisabled">
+                            Ένας γονέας έχει ≥67% αναπηρία
+                        </label>
+                        <label>
+                            <input type="checkbox" id="militaryParentDied">
+                            Γονέας στρατιωτικός που πέθανε εν ώρα υπηρεσίας
+                        </label>
+                    </div>
+                    <!---------------------------->
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="hasChildren">
+                            Έχω παιδιά
+                        </label>
+                        <div class="sub-group" id="childrenGroup">
+                            <label>
+                                Αριθμός ζωντανών παιδιών: <input type="number" id="childrenCount" min="0" value="0">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="section">
+                <div class="section-header">
+                    <i class="fas fa-ring"></i>
+                    <span>Κατάσταση Γάμου</span>
+                </div>
+                <div class="section-content">
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="isMarried">
+                            Είστε παντρεμένος;
+                        </label>
+                        <div class="sub-group" id="spouseGroup">
+                            <label>
+                                <input type="checkbox" id="spouseDisabled">
+                                Η σύζυγός μου έχει ≥67% αναπηρία
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="button-container">
+                <button class="calculate-btn" onclick="calculateService()">
+                    <i class="fas fa-calculator"></i> Υπολογισμός Θητείας
+                </button>
+                <button class="clear-btn" onclick="clearForm()">
+                    <i class="fas fa-broom"></i> Καθαρισμός Φόρμας
+                </button>
+            </div>
+            <div id="result">
+                <h2><i class="fas fa-file-alt"></i> Αποτέλεσμα</h2>
+                <div class="service-type" id="serviceType"></div>
+                <div class="documents-list">
+                    <h3><i class="fas fa-clipboard-list"></i> Απαιτούμενα Έγγραφα</h3>
+                    <ul id="requiredDocuments"></ul>
+                </div>
+                <!-- INFO BOX WITH NEW ID AND INITIAL DISPLAY NONE -->
+                <div id="familyCertInfoBox" class="info-box">
+                    <i class="fas fa-info-circle"></i>
+                    <div>
+                        Για την έκδοση της <span class="highlight">βεβαίωσης οικογενειακής κατάστασης για στρατολογική χρήση</span>, απευθυνθείτε στο ΚΕΠ (Κέντρο Εξυπηρέτησης Πολιτών) της περιοχής σας. Μην ξεχάσετε να ζητήσετε συγκεκριμένα τη βεβαίωση για στρατολογική χρήση.
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="disclaimer">
+            <p><i class="fas fa-exclamation-circle"></i> Αυτό το εργαλείο παρέχεται για ενημερωτικούς σκοπούς. Για ακριβείς πληροφορίες, επικοινωνήστε με την αρμόδια στρατολογική υπηρεσία.</p>
+        </div>
+    </div>
+    <footer>
+        <p>© 2025 ΣΤΡ (ΠΖ) Καραθανασόπουλος Γεώργιος | Αυτό το εργαλείο παρέχεται για ενημερωτικούς σκοπούς</p>
+    </footer>
+    <script>
+        // Helper function to calculate buyout cost
+        function calculateBuyoutCost(baseMonths, daysServed, monthlyRate, dailyRate) {
+            const totalBaseDays = baseMonths * 30; // Total days in military months for buyout
+            let remainingDays = totalBaseDays - daysServed;
+
+
+            // If remainingDays is less than or equal to 0, it means the entire service (or more) has been served.
+            // In this case, there's nothing to buy out.
+            if (remainingDays <= 0) {
+                return 0; 
+            }
+
+
+            const buyoutMonths = Math.floor(remainingDays / 30);
+            const buyoutDays = remainingDays % 30;
+
+
+            const cost = (buyoutMonths * monthlyRate) + (buyoutDays * dailyRate);
+            return Math.ceil(cost); // Round up to the nearest natural number
+        }
+
+
+        // Toggle section visibility
+        const sections = document.querySelectorAll('.section');
+        sections.forEach(section => {
+            const header = section.querySelector('.section-header');
+            header.addEventListener('click', () => {
+                section.classList.toggle('active');
+            });
+        });
+
+
+        // Show/hide sub-groups based on checkbox status
+        document.getElementById('hasSiblings').addEventListener('change', function() {
+            document.getElementById('siblingsGroup').style.display = this.checked ? 'block' : 'none';
+        });
+
+
+        document.getElementById('hasChildren').addEventListener('change', function() {
+            document.getElementById('childrenGroup').style.display = this.checked ? 'block' : 'none';
+        });
+        document.getElementById('isMarried').addEventListener('change', function() {
+            document.getElementById('spouseGroup').style.display = this.checked ? 'block' : 'none';
+        });
+
+
+        // Show eastern bloc question if age is over 30
+        document.getElementById('age').addEventListener('input', function() {
+            const age = parseInt(this.value) || 0;
+            const easternBlockGroup = document.getElementById('easternBlockGroup');
+            
+            if (age > 30) {
+                easternBlockGroup.style.display = 'block';
+            } else {
+                easternBlockGroup.style.display = 'none';
+                document.getElementById('easternBlock').checked = false; // Uncheck if group is hidden
+            }
+
+
+            // Also check buyout age requirement and days served visibility when age changes
+            const buyoutCheckbox = document.getElementById('buyout');
+            const buyoutWarning = document.getElementById('buyoutWarning');
+            const buyoutDaysServedGroup = document.getElementById('buyoutDaysServedGroup');
+            
+            if (buyoutCheckbox.checked) {
+                if (age < 33) {
+                    buyoutWarning.style.display = 'block';
+                    buyoutDaysServedGroup.style.display = 'none'; // Hide days served if age becomes invalid
+                    document.getElementById('daysServed').value = '20'; // Reset
+                    document.getElementById('daysServedWarning').style.display = 'none';
+                } else {
+                    buyoutWarning.style.display = 'none';
+                    buyoutDaysServedGroup.style.display = 'block'; // Show days served if age becomes valid
+                }
+            } else {
+                buyoutWarning.style.display = 'none'; // Always hide if buyout is not checked
+                buyoutDaysServedGroup.style.display = 'none'; // Always hide if buyout is not checked
+            }
+        });
+
+
+        // Toggle buyout days served input visibility based on buyout checkbox
+        document.getElementById('buyout').addEventListener('change', function() {
+            const age = parseInt(document.getElementById('age').value) || 0;
+            const buyoutWarning = document.getElementById('buyoutWarning');
+            const buyoutDaysServedGroup = document.getElementById('buyoutDaysServedGroup');
+            const daysServedInput = document.getElementById('daysServed');
+
+
+            let showBuyoutFields = this.checked;
+
+
+            if (this.checked && age < 33) {
+                buyoutWarning.style.display = 'block';
+                showBuyoutFields = false; // Don't show days served if age requirement not met
+            } else {
+                buyoutWarning.style.display = 'none';
+            }
+
+
+            buyoutDaysServedGroup.style.display = showBuyoutFields ? 'block' : 'none';
+            
+            // Reset days served input if hiding the group or if age requirement not met
+            if (!showBuyoutFields) {
+                daysServedInput.value = '20'; // Reset to min valid value
+                document.getElementById('daysServedWarning').style.display = 'none'; // Hide any previous warning
+            }
+        });
+
+
+        function calculateService() {
+            // Get values
+            const age = parseInt(document.getElementById('age').value) || 0;
+            const buyout = document.getElementById('buyout').checked;
+            const foreignResident = document.getElementById('foreignResident').checked;
+            const easternBlock = document.getElementById('easternBlock').checked;
+            const hasSiblings = document.getElementById('hasSiblings').checked;
+            const siblingsCount = hasSiblings ? parseInt(document.getElementById('siblingsCount').value) : 0;
+            const marriedParents = document.getElementById('marriedParents').checked;
+            const divorcedParents = document.getElementById('divorcedParents').checked;
+            const bothParentsDead = document.getElementById('bothParentsDead').checked;
+            const bothParentsDisabled = document.getElementById('bothParentsDisabled').checked;
+            const oneParentDead = document.getElementById('oneParentDead').checked;
+            const oneParentDisabled = document.getElementById('oneParentDisabled').checked;
+            const singleMother = document.getElementById('singleMother').checked;
+            const militaryParentDied = document.getElementById('militaryParentDied').checked;
+            const hasChildren = document.getElementById('hasChildren').checked;
+            const childrenCount = hasChildren ? parseInt(document.getElementById('childrenCount').value) : 0;
+            const isMarried = document.getElementById('isMarried').checked;
+            const spouseDisabled = isMarried && document.getElementById('spouseDisabled').checked;
+            const over35 = document.getElementById('over35').checked;
+            const daysServed = parseInt(document.getElementById('daysServed').value);
+
+
+            // Clear any previous warnings
+            document.getElementById('buyoutWarning').style.display = 'none';
+            document.getElementById('daysServedWarning').style.display = 'none';
+
+
+            // Base documents, required for all cases
+            let documents = ["Αστυνομική ταυτότητα", "Σημείωμα κατάταξης"];
+            let serviceDescription = "";
+
+
+            let calculatedBaseMonths = 12; // Default for full service
+            let isDayBasedService = false; // Flag for special day-based services (20 days)
+            let isBuyoutAttempted = buyout;
+            let needsFamilyCert = false; // Flag to add "Βεβαίωση οικογενειακής κατάστασης για στρατολογική χρήση"
+            let showFamilyCertInfo = false; // Flag to show the info box for family cert
+
+
+
+
+            // --- Add specific documents based on SELECTED OPTIONS ---
+
+
+            if (foreignResident) {
+                documents.push(
+                    "Αίτηση στη στρατολογία για μόνιμος κάτοικος εξωτερικού",
+                    "Πιστοποιητικό της αρμόδιας Ελληνικής Προξενικής Αρχής (ισχύει για έξι μήνες από την ημερομηνία έκδοσής του)",
+                    "Σε περίπτωση σπουδών σε ανώτερη ή ανώτατη σχολή (από ενηλίκους) συνυποβάλλεται πιστοποιητικό ή βεβαίωση του οικείου εκπαιδευτικού ιδρύματος"
+                );
+            }
+
+
+            if (over35) {
+                documents.push("Βεβαίωση πολιτογράφησης");
+            }
+            if (age > 30 && easternBlock) {
+                documents.push("Βεβαίωση καταγωγής");
+            }
+            if (isMarried && spouseDisabled) {
+                documents.push("Βεβαίωση αναπηρίας συζύγου");
+            }
+
+
+            // --- Determine "base" duration of service, before considering buyout ---
+            // Hierarchy: 20-day > 3-month special > 6-month status > 9-month status > 12-month default
+
+
+            if (over35) {
+                serviceDescription = "Θητεία 20 ημερών λόγω ηλικίας (35+)";
+                isDayBasedService = true;
+                calculatedBaseMonths = 0; // Not month-based for most calculations
+            } else if (foreignResident && !buyout) { // Foreign Resident, NOT buying out
+                serviceDescription = "Θητεία 3 μηνών λόγω διαμονής στο εξωτερικό.<br><em><small>(Δυνατότητα τμηματικής θητείας σε μηνιαίες δόσεις)</small></em>";
+                calculatedBaseMonths = 3;
+            } else if (age > 30 && easternBlock) {
+                 serviceDescription = "Θητεία 3 μηνών λόγω προέλευσης από πρώην ανατολικό μπλοκ";
+                 calculatedBaseMonths = 3;
+            }
+            // Family status reductions - sorted by shortest duration first
+            else if (militaryParentDied) { // New highest priority family status
+                serviceDescription = "Θητεία 3 μηνών (λόγω γονέα στρατιωτικού που πέθανε εν ώρα υπηρεσίας)";
+                calculatedBaseMonths = 3;
+                needsFamilyCert = true;
+            }
+            // 6-month status conditions
+            else if (childrenCount >= 2) { // NEW: 2+ children -> 6 months
+                serviceDescription = "Ισότιμη θητεία 6 μηνών (λόγω 2+ ζώντων τέκνων)";
+                calculatedBaseMonths = 6;
+                needsFamilyCert = true;
+            }
+            else if (siblingsCount >= 3) {
+                serviceDescription = "Ισότιμη θητεία 6 μηνών (λόγω 3+ ζώντων αδελφών)";
+                calculatedBaseMonths = 6;
+                needsFamilyCert = true;
+                // showFamilyCertInfo = true; // This will now be controlled by siblingsCount >= 2 condition
+            }
+            else if (bothParentsDead) {
+                serviceDescription = "Ισότιμη θητεία 6 μηνών (λόγω θανάτου και των δύο γονέων)";
+                calculatedBaseMonths = 6;
+                needsFamilyCert = true;
+            }
+            else if (bothParentsDisabled) {
+                serviceDescription = "Ισότιμη θητεία 6 μηνών (λόγω αναπηρίας και των δύο γονέων)";
+                calculatedBaseMonths = 6;
+                needsFamilyCert = true;
+            }
+            // 9-month status conditions
+            else if (childrenCount == 1) { // NEW: 1 child -> 9 months
+                serviceDescription = "Ισότιμη θητεία 9 μηνών (λόγω 1 ζώντος τέκνου)";
+                calculatedBaseMonths = 9;
+                needsFamilyCert = true;
+            }
+            else if (siblingsCount == 2) {
+                serviceDescription = "Ισότιμη θητεία 9 μηνών (λόγω 2 ζώντων αδελφών)";
+                calculatedBaseMonths = 9;
+                needsFamilyCert = true;
+                // showFamilyCertInfo = true; // This will now be controlled by siblingsCount >= 2 condition
+            }
+            else if (singleMother) {
+                serviceDescription = "Ισότιμη θητεία 9 μηνών (λόγω άγαμης μητέρας)";
+                calculatedBaseMonths = 9;
+                needsFamilyCert = true;
+            }
+            else if (oneParentDead) {
+                serviceDescription = "Ισότιμη θητεία 9 μηνών (λόγω θανάτου ενός γονέα)";
+                calculatedBaseMonths = 9;
+                needsFamilyCert = true;
+            }
+            else if (oneParentDisabled) {
+                serviceDescription = "Ισότιμη θητεία 9 μηνών (λόγω αναπηρίας ενός γονέα)";
+                calculatedBaseMonths = 9;
+                needsFamilyCert = true;
+            }
+            else if (isMarried && spouseDisabled) {
+                serviceDescription = "Ισότιμη θητεία 9 μηνών (λόγω συζύγου με αναπηρία)";
+                calculatedBaseMonths = 9;
+                needsFamilyCert = true;
+            }
+            // marriedParents and divorcedParents do not reduce service, so they are not included in this chain
+            else {
+                serviceDescription = "Πλήρη θητεία 12 μηνών"; // Default
+            }
+
+
+            // Add "Βεβαίωση οικογενειακής κατάστασης για στρατολογική χρήση" if any family-oriented reduction applied
+            if (needsFamilyCert) {
+                const familyCertDoc = "Βεβαίωση οικογενειακής κατάστασης για στρατολογική χρήση";
+                // Only add if not already present to avoid duplicates
+                if (!documents.includes(familyCertDoc)) {
+                    documents.push(familyCertDoc);
+                }
+            }
+
+
+            // Set showFamilyCertInfo only if hasSiblings is checked AND siblingsCount >= 2
+            if (hasSiblings && siblingsCount >= 2) {
+                showFamilyCertInfo = true;
+            } else {
+                showFamilyCertInfo = false; // Ensure it's false otherwise
+            }
+
+
+
+
+            // --- Apply buyout logic if selected ---
+            if (isBuyoutAttempted) {
+                if (age < 33) {
+                    serviceDescription = "Δεν έχετε δικαίωμα εξαγοράς θητείας λόγω ηλικίας (απαιτείται ηλικία 33 ετών και άνω)";
+                    documents = ["Παρακαλώ επικοινωνήστε με την αρμόδια στρατολογική υπηρεσία για περισσότερες πληροφορίες"];
+                } else if (isDayBasedService) {
+                    serviceDescription = `Έχετε δικαίωμα για ${over35 ? 'έκτιση θητείας 20 ημερών' : 'έκτιση θητείας (βάσει αρχικής διαμόρφωσης)'}. Η εξαγορά δεν εφαρμόζεται σε θητεία ημερών.`;
+                } else if (isNaN(daysServed) || daysServed < 20) { // Removed daysServed > 30 validation
+                    serviceDescription = "Παρακαλώ εισάγετε έγκυρο αριθμό ημερών που θα υπηρετήσετε για την εξαγορά (τουλάχιστον 20)."; // Updated message
+                    documents = []; // Clear documents if input for buyout is invalid
+                } else {
+                    let totalBuyoutCost;
+                    let paymentInfo = "";
+
+
+                    if (foreignResident) {
+                        const buyoutBaseMonthsFR = 6; // Foreign resident buyout is based on 6 months
+                        const monthlyRate = 810;
+                        const dailyRate = 27; // Custom daily rate for foreign residents
+                        
+                        totalBuyoutCost = calculateBuyoutCost(buyoutBaseMonthsFR, daysServed, monthlyRate, dailyRate);
+                        
+                        const paymentPeriods = 2; // Fixed 2 payments for foreign resident buyout
+                        const paymentAmount = Math.ceil(totalBuyoutCost / paymentPeriods);
+                        serviceDescription = `Εξαγορά Θητείας ως κάτοικος εξωτερικού (${buyoutBaseMonthsFR} μήνες). Συνολικό κόστος: ${totalBuyoutCost}€`;
+                        paymentInfo = ` Το ποσό αυτό πρέπει να καταβληθεί σε ${paymentPeriods} δόσεις των ${paymentAmount}€ η καθεμία.`;
+                    } else { // General Buyout (for ALL non-foreign residents)
+                        const monthlyRate = 810;
+                        const dailyRate = 20;
+
+
+                        totalBuyoutCost = calculateBuyoutCost(calculatedBaseMonths, daysServed, monthlyRate, dailyRate);
+
+
+                        let paymentPeriods;
+                        if (calculatedBaseMonths === 12) { // Full term buyout
+                            paymentPeriods = 4;
+                        } else { // Reduced term buyout (3, 6, 9 months)
+                            paymentPeriods = 3;
+                        }
+                        const paymentAmount = Math.ceil(totalBuyoutCost / paymentPeriods);
+
+
+                        serviceDescription = `Εξαγορά θητείας ${calculatedBaseMonths} μηνών. Συνολικό κόστος: ${totalBuyoutCost}€`;
+                        paymentInfo = ` Το ποσό των ${totalBuyoutCost}€ πρέπει να καταβληθεί σε ${paymentPeriods} δόσεις των ${paymentAmount}€ η καθεμία.`;
+                    }
+                    serviceDescription += paymentInfo;
+                }
+            }
+
+
+            // Display results
+            document.getElementById('serviceType').innerHTML = serviceDescription; // Use innerHTML to render line breaks and small tag
+            const documentsList = document.getElementById('requiredDocuments');
+            documentsList.innerHTML = '';
+            // Remove duplicates from documents before displaying
+            const uniqueDocuments = [...new Set(documents)];
+            uniqueDocuments.forEach(doc => {
+                const li = document.createElement('li');
+                li.textContent = doc;
+                documentsList.appendChild(li);
+            });
+
+
+            // Control visibility of the familyCertInfoBox
+            if (showFamilyCertInfo) {
+                document.getElementById('familyCertInfoBox').style.display = 'flex'; // Use flex to maintain layout for info-box
+            } else {
+                document.getElementById('familyCertInfoBox').style.display = 'none';
+            }
+
+
+            document.getElementById('result').style.display = 'block';
+        }
+
+
+        function clearForm() {
+            // Reset all checkboxes
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = false;
+            });
+            // Reset number inputs
+            document.getElementById('siblingsCount').value = '0';
+            document.getElementById('childrenCount').value = '0';
+            document.getElementById('age').value = '18';
+            document.getElementById('daysServed').value = '20'; // Reset days served input
+
+
+            // Hide all sub-groups
+            document.getElementById('siblingsGroup').style.display = 'none';
+            document.getElementById('childrenGroup').style.display = 'none';
+            document.getElementById('spouseGroup').style.display = 'none';
+            document.getElementById('easternBlockGroup').style.display = 'none';
+            document.getElementById('buyoutWarning').style.display = 'none';
+            document.getElementById('buyoutDaysServedGroup').style.display = 'none'; // Hide buyout days group
+            document.getElementById('daysServedWarning').style.display = 'none'; // Hide days served warning
+            
+            // Hide result section and specific info box
+            document.getElementById('result').style.display = 'none';
+            document.getElementById('familyCertInfoBox').style.display = 'none'; // Ensure it's hidden on clear
+        }
+
+
+        // Initialize hidden groups on page load
+        document.getElementById('siblingsGroup').style.display = 'none';
+        document.getElementById('childrenGroup').style.display = 'none';
+        document.getElementById('spouseGroup').style.display = 'none';
+        document.getElementById('easternBlockGroup').style.display = 'none';
+        document.getElementById('buyoutDaysServedGroup').style.display = 'none'; // Ensure this is hidden on load
+        document.getElementById('daysServedWarning').style.display = 'none'; // Ensure this is hidden on load
+    </script>
+</body>
+</html>
