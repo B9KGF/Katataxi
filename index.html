@@ -139,6 +139,13 @@
             padding-left: 15px;
             border-left: 3px solid #0d3b66;
         }
+        .info-text { /* New style for the informative text */
+            font-size: 0.85em;
+            color: #666;
+            margin-top: 5px;
+            padding-left: 2px; /* Align with general text, not checkbox indentation */
+            max-width: 90%; /* To prevent stretching on very wide screens */
+        }
         .button-container {
             display: flex;
             justify-content: center;
@@ -420,10 +427,13 @@
                             <label>
                                 Έτη διαμονής: <input type="number" id="yearsResidence" min="0" value="0">
                             </label>
-                            <label>
+                             <label>
                                 <input type="checkbox" id="bornAbroad">
                                 Είμαι γεννηθείς εξωτερικού
                             </label>
+                            <p class="info-text">
+                                <i class="fas fa-info-circle"></i> Για να θεωρηθείτε Μόνιμος Κάτοικος Εξωτερικού και να δικαιούστε μειωμένη θητεία, εκτός από 11 έτη διαμονής ή 7 έτη βιοποριστικής εγκατάστασης, δεν πρέπει να έχετε διαμείνει στην Ελλάδα για χρονικό διάστημα μεγαλύτερο των 6 μηνών ανά έτος.
+                            </p>
                         </div>
                     </div>
                     <div class="form-group">
@@ -576,7 +586,7 @@
             </div>
         </div>
         <div class="disclaimer">
-            <p><i class="fas fa-exclamation-circle"></i> Αυτό το εργαλείο παρέχεται για ενημερωτικούς σκοπούς. Για ακριβείς πληροφορίες, επικοινωνήστε με την αρμόδια στρατολογική υπηρεσία. <span style="font-size: 0.8em; opacity: 0.8;">v0.9.5.1</span></p>
+            <p><i class="fas fa-exclamation-circle"></i> Αυτό το εργαλείο παρέχεται για ενημερωτικούς σκοπούς. Για ακριβείς πληροφορίες, επικοινωνήστε με την αρμόδια στρατολογική υπηρεσία. <span style="font-size: 0.8em; opacity: 0.8;">v0.9.5.3</span></p>
         </div>
     </div>
     <footer>
@@ -707,7 +717,7 @@
                 document.getElementById('result').style.display = 'block';
                 return;
             } else if (age >= 45) {
-                document.getElementById('serviceType').innerHTML = `Απαλλαγή από στρατιωτική θητεία (λόγω ηλικίας 45+).<br><span style="font-size: 0.9em; color: #555;">Να καλέσει τη στρατολογική υπηρεσία στην οποία ανήκει για να το διευθετήσει.</span>`;
+                document.getElementById('serviceType').innerHTML = `Απαλλαγή από στρατιωτική θητεία (λόγου ηλικίας 45+).<br><span style="font-size: 0.9em; color: #555;">Να καλέσει τη στρατολογική υπηρεσία στην οποία ανήκει για να το διευθετήσει.</span>`;
                 document.getElementById('requiredDocuments').innerHTML = `<li>Αστυνομική ταυτότητα</li>`;
                 document.getElementById('result').style.display = 'block';
                 document.getElementById('feedbackFormSection').style.display = 'block';
@@ -777,14 +787,14 @@
                 isDayBasedService = true;
                 calculatedBaseMonths = 0; // Not month-based
             } else if (qualifiesAsFR && bornAbroad) { // New: 3 months for FR born abroad AND meets year criteria
-                serviceDescription = "Θητεία 3 μηνών ως Μόνιμος Κάτοικος Εξωτερικού (γεννηθείς εξωτερικού, με πλήρωση κριτηρίων).<br><em><small>(Δυνατότητα τμηματικής θητείας σε μηνιαίες δόσεις)</small></em>";
+                serviceDescription = "Θητεία 3 μηνών ως Μόνιμος Κάτοικας Εξωτερικού (γεννηθείς εξωτερικού, με πλήρωση κριτηρίων).<br><em><small>(Δυνατότητα τμηματικής θητείας σε μηνιαίες δόσεις)</small></em>";
                 calculatedBaseMonths = 3;
             } else if (militaryParentDied) { // 3 months for military parent died
                 serviceDescription = "Θητεία 3 μηνών (λόγω γονέα στρατιωτικού που πέθανε εν ώρα υπηρεσίας)";
                 calculatedBaseMonths = 3;
                 needsFamilyCert = true;
             } else if (qualifiesAsFR) { // New: 6 months for FR with criteria but not born abroad (7yr financial OR 11yr residence)
-                serviceDescription = "Θητεία 6 μηνών ως Μόνιμος Κάτοικος Εξωτερικού (με πλήρωση κριτηρίων).<br><em><small>(Δυνατότητα τμηματικής θητείας σε μηνιαίες δόσεις)</small></em>";
+                serviceDescription = "Θητεία 6 μηνών ως Μόνιμος Κάτοικας Εξωτερικού (με πλήρωση κριτηρίων).<br><em><small>(Δυνατότητα τμηματικής θητείας σε μηνιαίες δόσεις)</small></em>";
                 calculatedBaseMonths = 6;
             } else if (hasChildren && childrenCount == 2) {
                 serviceDescription = "Θητεία 6 μηνών (λόγω 2 ζώντων τέκνων)";
@@ -809,7 +819,7 @@
             // If foreignResident is checked but does NOT qualifyAsFR based on years, they don't get the FR reductions
             // So, they fall through to other family status reductions or full 12 months.
             else if (hasChildren && childrenCount == 1) {
-                serviceDescription = "Θητεία 9 μηνών (λόγω 1 ζώντος τέκνου)";
+                serviceDescription = "Θητεία 9 μηνών (λόγωγ 1 ζώντος τέκνου)";
                 calculatedBaseMonths = 9;
                 needsFamilyCert = true;
             }
@@ -848,7 +858,7 @@
                     serviceDescription = "Δεν έχετε δικαίωμα εξαγοράς θητείας λόγω ηλικίας (απαιτείται ηλικία 33 ετών και άνω)";
                     documents = ["Αστυνομική ταυτότητα"]; 
                 } else if (isDayBasedService) {
-                    serviceDescription = `Έχετε δικαίωμα για ${over35 ? 'έκτιση θητείας 20 ημερών' : 'έκτιση θητείας (βάσει αρχικής διαμόρησης)'}. Η εξαγορά δεν εφαρμόζεται σε θητεία ημερών.`;
+                    serviceDescription = `Έχετε δικαίωμα για ${over35 ? 'έκτιση θητείας 20 ημερών' : 'έκτιση θητείας (βάσει αρχικής διαμόρφωσης)'}. Η εξαγορά δεν εφαρμόζεται σε θητεία ημερών.`;
                     // Documents for 20-day service (e.g., Βεβαίωση πολιτογράφησης if over35)
                 } else if (isNaN(daysServed) || daysServed < 20) {
                     serviceDescription = "Παρακαλώ εισάγετε έγκυρο αριθμό ημερών που θα υπηρετήσετε για την εξαγορά (τουλάχιστον 20).";
@@ -874,7 +884,7 @@
                     let paymentPeriods;
                     if (buyoutCalculationBaseMonths === 12) {
                         paymentPeriods = 4; 
-                    } else if (buyoutCalculationBaseMonths === 6) { // **FIXED** for 6-month buyout
+                    } else if (buyoutCalculationBaseMonths === 6) { 
                         paymentPeriods = 2; 
                     }
                     else { // For 3 or 9 months calculatedBaseMonths
