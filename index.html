@@ -319,7 +319,7 @@
             box-shadow: 0 4px 10px rgba(46, 204, 113, 0.4);
         }
         .info-box {
-            background: #e3f2fd;
+            background : #e3f2fd;
             border-left: 4px solid #2196f3;
             padding: 15px;
             border-radius: 0 8px 8px 0;
@@ -576,7 +576,7 @@
             </div>
         </div>
         <div class="disclaimer">
-            <p><i class="fas fa-exclamation-circle"></i> Αυτό το εργαλείο παρέχεται για ενημερωτικούς σκοπούς. Για ακριβείς πληροφορίες, επικοινωνήστε με την αρμόδια στρατολογική υπηρεσία. <span style="font-size: 0.8em; opacity: 0.8;">v0.9.5</span></p>
+            <p><i class="fas fa-exclamation-circle"></i> Αυτό το εργαλείο παρέχεται για ενημερωτικούς σκοπούς. Για ακριβείς πληροφορίες, επικοινωνήστε με την αρμόδια στρατολογική υπηρεσία. <span style="font-size: 0.8em; opacity: 0.8;">v0.9.5.1</span></p>
         </div>
     </div>
     <footer>
@@ -615,7 +615,7 @@
             document.getElementById('spouseGroup').style.display = this.checked ? 'block' : 'none';
         });
 
-        // NEW: Show/hide foreign resident details based on checkbox status
+        // Show/hide foreign resident details based on checkbox status
         document.getElementById('foreignResident').addEventListener('change', function() {
             document.getElementById('foreignResidentDetailsGroup').style.display = this.checked ? 'block' : 'none';
             // Also reset values when hiding to ensure clean state
@@ -874,7 +874,10 @@
                     let paymentPeriods;
                     if (buyoutCalculationBaseMonths === 12) {
                         paymentPeriods = 4; 
-                    } else { // For 3, 6, 9 months calculatedBaseMonths
+                    } else if (buyoutCalculationBaseMonths === 6) { // **FIXED** for 6-month buyout
+                        paymentPeriods = 2; 
+                    }
+                    else { // For 3 or 9 months calculatedBaseMonths
                         paymentPeriods = 3; 
                     }
                     const paymentAmount = Math.ceil(totalBuyoutCost / paymentPeriods);
