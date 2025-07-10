@@ -70,7 +70,6 @@
             padding: 15px 20px;
             display: flex;
             align-items: center;
-            cursor: pointer;
             font-weight: 600;
             border-bottom: 1px solid #e0e0e0;
             transition: background 0.3s;
@@ -78,10 +77,18 @@
         .section-header:hover {
             background: #edf2f7;
         }
+        /* Default for collapsible sections */
         .section-header i {
             margin-right: 12px;
             color: #0d3b66;
             transition: transform 0.3s;
+        }
+        .section.active .section-header i {
+            transform: rotate(90deg); /* Rotate for active (open) collapsible sections */
+        }
+        /* Specific rule for permanently open sections to prevent icon rotation */
+        .section-fixed-open .section-header i {
+            transform: none !important; /* Override any rotation */
         }
         .section-content {
             padding: 20px;
@@ -91,9 +98,16 @@
         .section.active .section-content {
             display: block;
         }
-        .section.active .section-header i {
-            transform: rotate(90deg);
+        /* Cursor for collapsible sections */
+        .section:not(.section-fixed-open) .section-header {
+            cursor: pointer;
         }
+        /* Cursor for fixed open sections */
+        .section-fixed-open .section-header {
+            cursor: default;
+        }
+
+
         .form-group {
             margin-bottom: 20px;
             padding-bottom: 15px;
@@ -395,7 +409,8 @@
             <p>Συμπληρώστε τις πληροφορίες σας για να μάθετε τον τύπο θητείας και τα απαιτούμενα έγγραφα</p>
         </header>
         <div class="form-container">
-            <div class="section active">
+            <!-- PERSONAL DETAILS SECTION -->
+            <div class="section active section-fixed-open">
                 <div class="section-header">
                     <i class="fas fa-user"></i>
                     <span>Προσωπικά Στοιχεία</span>
@@ -413,6 +428,10 @@
                             <input type="checkbox" id="over35">
                             Είμαι 35 ετών και απέκτησα ελληνική ιθαγένεια
                         </label>
+                        <!-- Warning for over35 eligibility -->
+                        <div id="over35Warning" class="error-highlight" style="margin-top: 10px; display: none; padding: 8px; border-radius: 5px;">
+                            Δεν έχετε δικαίωμα της επιλογής αυτής λόγω ηλικίας (απαιτείται ηλικία 35 ετών και άνω)
+                        </div>
                     </div>
                     <div class="form-group">
                         <label>
@@ -432,7 +451,7 @@
                                 Είμαι γεννηθείς εξωτερικού
                             </label>
                             <p class="info-text">
-                                <i class="fas fa-info-circle"></i> Για να θεωρηθείτε Μόνιμος Κάτοικος Εξωτερικού και να δικαιούστε μειωμένη θητεία, εκτός από 11 έτη διαμονής ή 7 έτη βιοποριστικής εγκατάστασης, δεν πρέπει να έχετε διαμείνει στην Ελλάδα για χρονικό διάστημα μεγαλύτερο των 6 μηνών ανά έτος.
+                                <i class="fas fa-info-circle"></i> Για να θεωρηθείτε Μόνιμος Κάτοικας Εξωτερικού και να δικαιούστε μειωμένη θητεία, εκτός από 11 έτη διαμονής ή 7 έτη βιοποριστικής εγκατάστασης, δεν πρέπει να έχετε διαμείνει στην Ελλάδα για χρονικό διάστημα μεγαλύτερο των 6 μηνών ανά έτος.
                             </p>
                         </div>
                     </div>
@@ -458,7 +477,8 @@
                     </div>
                 </div>
             </div>
-            <div class="section active"> <!-- Changed to active -->
+            <!-- FAMILY STATUS SECTION -->
+            <div class="section active section-fixed-open">
                 <div class="section-header">
                     <i class="fas fa-users"></i>
                     <span>Οικογενειακή Κατάσταση</span>
@@ -475,7 +495,7 @@
                             </label>
                         </div>
                     </div>
-                    <!-- NEW PARENT STATUS GROUP (Always visible) -->
+                    <!-- REORGANIZED PARENT STATUS GROUP -->
                     <div class="form-group">
                         <p style="font-weight: 600; margin-bottom: 10px;">Κατάσταση Γονέων:</p>
                         <label>
@@ -487,12 +507,16 @@
                             Διαζευγμένοι γονείς
                         </label>
                         <label>
+                            <input type="checkbox" id="oneOrBothParentsOver70">
+                            Ένας ή και οι δύο γονείς είναι άνω των 70 ετών
+                        </label>
+                        <label>
                             <input type="checkbox" id="singleMother">
                             Είμαι μόνος ή μεγαλύτερος γιος άγαμης μητέρας
                         </label>
                         <label>
-                            <input type="checkbox" id="bothParentsDead">
-                            Και οι δύο γονείς έχουν πεθάνει
+                            <input type="checkbox" id="oneParentDisabled">
+                            Ένας γονέας έχει ≥67% αναπηρία
                         </label>
                         <label>
                             <input type="checkbox" id="bothParentsDisabled">
@@ -503,8 +527,8 @@
                             Ένας γονέας έχει πεθάνει
                         </label>
                         <label>
-                            <input type="checkbox" id="oneParentDisabled">
-                            Ένας γονέας έχει ≥67% αναπηρία
+                            <input type="checkbox" id="bothParentsDead">
+                            Και οι δύο γονείς έχουν πεθάνει
                         </label>
                         <label>
                             <input type="checkbox" id="militaryParentDied">
@@ -525,7 +549,8 @@
                     </div>
                 </div>
             </div>
-            <div class="section active"> <!-- Changed to active -->
+            <!-- MARRIAGE STATUS SECTION -->
+            <div class="section active section-fixed-open">
                 <div class="section-header">
                     <i class="fas fa-ring"></i>
                     <span>Κατάσταση Γάμου</span>
@@ -571,7 +596,8 @@
                 <div id="reducedServiceInfoBox" class="info-box">
                     <i class="fas fa-info-circle"></i>
                     <div>
-                        Σας προτείνουμε να συγκεντρώσετε άμεσα τα απαιτούμενα δικαιολογητικά και να τα καταθέσετε κατά την άδεια ορκωμοσίας σας. Η προθεσμία υποβολής αιτημάτων είναι μέχρι 1 μήνα πριν την απόλυσή σας. <br><br>
+                        <u>Η προθεσμία υποβολής αιτημάτων είναι μέχρι 1 μήνα πριν την απόλυσή σας.</u> <br><br>
+                        Σας προτείνουμε να συγκεντρώσετε άμεσα τα απαιτούμενα δικαιολογητικά και να τα καταθέσετε κατά την άδεια ορκωμοσίας σας. <br><br>
                         Η υποβολή αιτημάτων γίνεται ηλεκτρονικά μέσω του <a href="https://www.stratologia.gr" target="_blank" style="color: #1890ff; text-decoration: none;">www.stratologia.gr</a> → υποβολή αιτημάτων → αιτήσεις → κατάταξη → μείωση στρατιωτικής θητείας. Εκεί ανεβάζετε τα απαραίτητα δικαιολογητικά και αναμένετε την έγκριση από τη στρατολογική υπηρεσία στην οποία ανήκετε. <br><br>
                         Η δια ζώσης υποβολή γίνεται σε ΚΕΠ ή σε Στρατολογική Υπηρεσία (ΣΥ). Εκεί καταθέτετε τα απαραίτητα δικαιολογητικά και αναμένετε την έγκριση από τη στρατολογική υπηρεσία στην οποία ανήκετε.
                     </div>
@@ -586,7 +612,7 @@
             </div>
         </div>
         <div class="disclaimer">
-            <p><i class="fas fa-exclamation-circle"></i> Αυτό το εργαλείο παρέχεται για ενημερωτικούς σκοπούς. Για ακριβείς πληροφορίες, επικοινωνήστε με την αρμόδια στρατολογική υπηρεσία. <span style="font-size: 0.8em; opacity: 0.8;">v0.9.5.3</span></p>
+            <p><i class="fas fa-exclamation-circle"></i> Αυτό το εργαλείο παρέχεται για ενημερωτικούς σκοπούς. Για ακριβείς πληροφορίες, επικοινωνήστε με την αρμόδια στρατολογική υπηρεσία. <span style="font-size: 0.8em; opacity: 0.8;">v0.9.5.4</span></p>
         </div>
     </div>
     <footer>
@@ -599,21 +625,23 @@
             const dailyRate = monthlyRate / daysInMilitaryMonth;
             const totalBaseDays = baseMonths * daysInMilitaryMonth;
             let daysToPayFor = totalBaseDays - daysServed;
-            if (daysToPayFor < 0) daysToPayFor = 0;
+            if (daysToPayFor < 0) daysToPayFor = 0; // Cannot pay for negative days
             const buyoutMonths = Math.floor(daysToPayFor / daysInMilitaryMonth);
             const buyoutRemainingDays = daysToPayFor % daysInMilitaryMonth;
             // Updated calculation: Use monthlyRate for full months, and dailyRate for remaining days.
             const cost = (buyoutMonths * monthlyRate) + (buyoutRemainingDays * dailyRate);
             return Math.ceil(cost);
         }
-        // Toggle section visibility (initial state is handled by HTML 'active' class)
-        const sections = document.querySelectorAll('.section');
-        sections.forEach(section => {
+
+        // Toggle section visibility only for collapsible sections
+        const collapsibleSections = document.querySelectorAll('.section:not(.section-fixed-open)');
+        collapsibleSections.forEach(section => {
             const header = section.querySelector('.section-header');
             header.addEventListener('click', () => {
                 section.classList.toggle('active');
             });
         });
+
         // Show/hide sub-groups based on checkbox status
         document.getElementById('hasSiblings').addEventListener('change', function() {
             document.getElementById('siblingsGroup').style.display = this.checked ? 'block' : 'none';
@@ -636,15 +664,18 @@
             }
         });
 
-        document.getElementById('age').addEventListener('input', function() {
-            const age = parseInt(this.value);
+        // Function to check and control buyout eligibility based on age
+        function checkBuyoutEligibility() {
+            const age = parseInt(document.getElementById('age').value);
             const buyoutCheckbox = document.getElementById('buyout');
             const buyoutWarning = document.getElementById('buyoutWarning');
             const buyoutDaysServedGroup = document.getElementById('buyoutDaysServedGroup');
+            
             if (buyoutCheckbox.checked) {
                 if (isNaN(age) || age < 33) {
                     buyoutWarning.style.display = 'block';
                     buyoutDaysServedGroup.style.display = 'none';
+                    buyoutCheckbox.checked = false; // Uncheck if ineligible
                     document.getElementById('daysServed').value = '20';
                     document.getElementById('daysServedWarning').style.display = 'none';
                 } else {
@@ -654,30 +685,41 @@
             } else {
                 buyoutWarning.style.display = 'none';
                 buyoutDaysServedGroup.style.display = 'none';
-            }
-        });
-
-        document.getElementById('buyout').addEventListener('change', function() {
-            const age = parseInt(document.getElementById('age').value);
-            const buyoutWarning = document.getElementById('buyoutWarning');
-            const buyoutDaysServedGroup = document.getElementById('buyoutDaysServedGroup');
-            const daysServedInput = document.getElementById('daysServed');
-            let showBuyoutFields = this.checked;
-            if (this.checked && (isNaN(age) || age < 33)) {
-                buyoutWarning.style.display = 'block';
-                showBuyoutFields = false;
-            } else {
-                buyoutWarning.style.display = 'none';
-            }
-            buyoutDaysServedGroup.style.display = showBuyoutFields ? 'block' : 'none';
-            if (!showBuyoutFields) {
-                daysServedInput.value = '20';
+                document.getElementById('daysServed').value = '20'; // Reset days served
                 document.getElementById('daysServedWarning').style.display = 'none';
             }
+        }
+
+        // Function to check and control over35 eligibility based on age
+        function checkOver35Eligibility() {
+            const age = parseInt(document.getElementById('age').value);
+            const over35Checkbox = document.getElementById('over35');
+            const over35Warning = document.getElementById('over35Warning');
+
+            if (over35Checkbox.checked) {
+                if (isNaN(age) || age < 35) {
+                    over35Warning.style.display = 'block';
+                    over35Checkbox.checked = false; // Uncheck if ineligible
+                } else {
+                    over35Warning.style.display = 'none';
+                }
+            } else {
+                over35Warning.style.display = 'none';
+            }
+        }
+
+        // Event listeners for age and relevant checkboxes
+        document.getElementById('age').addEventListener('input', function() {
+            checkBuyoutEligibility();
+            checkOver35Eligibility();
         });
 
+        document.getElementById('buyout').addEventListener('change', checkBuyoutEligibility);
+        document.getElementById('over35').addEventListener('change', checkOver35Eligibility);
+
+
         function calculateService() {
-            // Get values
+            // Get values from form inputs
             const ageInput = document.getElementById('age').value;
             const age = parseInt(ageInput);
             const buyout = document.getElementById('buyout').checked;
@@ -685,7 +727,6 @@
             const yearsFinancial = foreignResident ? parseInt(document.getElementById('yearsFinancial').value) : 0;
             const yearsResidence = foreignResident ? parseInt(document.getElementById('yearsResidence').value) : 0;
             const bornAbroad = foreignResident ? document.getElementById('bornAbroad').checked : false;
-
             const hasSiblings = document.getElementById('hasSiblings').checked;
             const siblingsCount = hasSiblings ? parseInt(document.getElementById('siblingsCount').value) : 0;
             const marriedParents = document.getElementById('marriedParents').checked;
@@ -696,15 +737,18 @@
             const oneParentDisabled = document.getElementById('oneParentDisabled').checked;
             const singleMother = document.getElementById('singleMother').checked;
             const militaryParentDied = document.getElementById('militaryParentDied').checked;
+            // Get checkbox for parents over 70
+            const oneOrBothParentsOver70 = document.getElementById('oneOrBothParentsOver70').checked;
             const hasChildren = document.getElementById('hasChildren').checked;
             const childrenCount = hasChildren ? parseInt(document.getElementById('childrenCount').value) : 0;
             const isMarried = document.getElementById('isMarried').checked;
             const spouseDisabled = isMarried && document.getElementById('spouseDisabled').checked;
-            const over35 = document.getElementById('over35').checked;
+            const over35 = document.getElementById('over35').checked; 
             const daysServed = parseInt(document.getElementById('daysServed').value);
 
             // Clear any previous warnings and info boxes
             document.getElementById('buyoutWarning').style.display = 'none';
+            document.getElementById('over35Warning').style.display = 'none';
             document.getElementById('daysServedWarning').style.display = 'none';
             document.getElementById('familyCertInfoBox').style.display = 'none';
             document.getElementById('reducedServiceInfoBox').style.display = 'none';
@@ -727,32 +771,26 @@
             let documents = ["Αστυνομική ταυτότητα"];
             let serviceDescription = "";
             let calculatedBaseMonths = 12; // Default for full service
-            let isDayBasedService = false;
-            let isBuyoutAttempted = buyout;
+            let isBuyoutAttempted = buyout; 
             let needsFamilyCert = false;
-
             let fullServiceDocuments = ['Δεν απαιτούνται δικαιολογητικά για πλήρη θητεία'];
-            
+
             // Determine if user can be considered a Foreign Resident for service reduction purposes
             let qualifiesAsFR = false;
             if (foreignResident && (yearsFinancial >= 7 || yearsResidence >= 11)) {
                 qualifiesAsFR = true;
             }
-            // Add FR specific documents if the checkbox is checked, regardless of whether they "qualify" for reduced service
+
+            // Add FR specific documents if the checkbox is checked
             if (foreignResident) {
                 documents.push(
                     "Αίτηση στη στρατολογία για μόνιμος κάτοικος εξωτερικού",
-                    "Ειδικό πιστοποιητικό της αρμόδιας Ελληνικής Προξενικής Αρχής (ισχύει για έξι μήνες από την ημερομηνία έκδοσής του)",
-                    "Λογαριασμοί κοινής ωφέλειας, τραπεζικά παραστατικά ή άλλα αποδεικτικά διαμονής που καλύπτουν το απαιτούμενο χρονικό διάστημα."
+                    "Ειδικό πιστοποιητικό της αρμόδιας Ελληνικής Προξενικής Αρχής (ισχύει για έξι μήνες από την ημερομηνία έκδοσής του)"
                 );
-                if (yearsFinancial >= 7) {
-                    documents.push("Επιπλέον: Βεβαιώσεις εργοδοτών ή φορολογικές δηλώσεις για απόδειξη βιοποριστικής εγκατάστασης");
-                }
                 if (bornAbroad) {
                     documents.push("Επιπλέον: Πιστοποιητικό γέννησης από το εξωτερικό");
                 }
             }
-
 
             // --- Exemption for 3+ children (Highest Priority among service-age cases) ---
             if (hasChildren && childrenCount >= 3) {
@@ -780,20 +818,25 @@
             }
 
             // --- Determine "base" duration of service, before considering buyout ---
-            // Priority for reductions: 20 days (over 35) > 3 months (FR Born Abroad) > 3 months (military parent died) > 6 months (FR with criteria or Family Status) > 9 months (FR or Family Status) > 12 months (Default)
-
-            if (over35) { // 20-day service takes highest priority if applicable
-                serviceDescription = "Θητεία 20 ημερών λόγω ηλικίας (35+).";
-                isDayBasedService = true;
-                calculatedBaseMonths = 0; // Not month-based
-            } else if (qualifiesAsFR && bornAbroad) { // New: 3 months for FR born abroad AND meets year criteria
+            // Hierarchy of service reductions (from shortest to longest duration, then family status):
+            // 3 months: FR Born Abroad, Military Parent Died
+            // 6 months: Over 35, FR with criteria, 2 Children, 3+ Siblings, Both Parents Dead, Both Parents Disabled
+            // 9 months: 1 Child, 2 Siblings, Single Mother, One Parent Dead, One Parent Disabled, Spouse Disabled, One/Both Parents Over 70
+            // 12 months: Default
+            
+            if (over35) { 
+                serviceDescription = "Θητεία 6 μηνών λόγω ηλικίας (35+).";
+                calculatedBaseMonths = 6;
+                needsFamilyCert = true; 
+                documents.push("Πιστοποιητικό Γέννησης / Ταυτότητα για επιβεβαίωση ηλικίας");
+            } else if (qualifiesAsFR && bornAbroad) {
                 serviceDescription = "Θητεία 3 μηνών ως Μόνιμος Κάτοικας Εξωτερικού (γεννηθείς εξωτερικού, με πλήρωση κριτηρίων).<br><em><small>(Δυνατότητα τμηματικής θητείας σε μηνιαίες δόσεις)</small></em>";
                 calculatedBaseMonths = 3;
-            } else if (militaryParentDied) { // 3 months for military parent died
+            } else if (militaryParentDied) {
                 serviceDescription = "Θητεία 3 μηνών (λόγω γονέα στρατιωτικού που πέθανε εν ώρα υπηρεσίας)";
                 calculatedBaseMonths = 3;
                 needsFamilyCert = true;
-            } else if (qualifiesAsFR) { // New: 6 months for FR with criteria but not born abroad (7yr financial OR 11yr residence)
+            } else if (qualifiesAsFR) {
                 serviceDescription = "Θητεία 6 μηνών ως Μόνιμος Κάτοικας Εξωτερικού (με πλήρωση κριτηρίων).<br><em><small>(Δυνατότητα τμηματικής θητείας σε μηνιαίες δόσεις)</small></em>";
                 calculatedBaseMonths = 6;
             } else if (hasChildren && childrenCount == 2) {
@@ -816,15 +859,14 @@
                 calculatedBaseMonths = 6;
                 needsFamilyCert = true;
             }
-            // If foreignResident is checked but does NOT qualifyAsFR based on years, they don't get the FR reductions
-            // So, they fall through to other family status reductions or full 12 months.
+            // 9-month cases
             else if (hasChildren && childrenCount == 1) {
-                serviceDescription = "Θητεία 9 μηνών (λόγωγ 1 ζώντος τέκνου)";
+                serviceDescription = "Θητεία 9 μηνών (λόγω 1 ζώντος τέκνου)";
                 calculatedBaseMonths = 9;
                 needsFamilyCert = true;
             }
             else if (siblingsCount == 2) {
-                serviceDescription = "Θητεία 9 μηνών (λόγω 2 ζώων αδελφών)";
+                serviceDescription = "Θητεία 9 μηνών (λόγω 2 ζώντων αδελφών)";
                 calculatedBaseMonths = 9;
                 needsFamilyCert = true;
             }
@@ -848,92 +890,101 @@
                 calculatedBaseMonths = 9;
                 needsFamilyCert = true;
             }
+            else if (oneOrBothParentsOver70) { 
+                serviceDescription = "Θητεία 9 μηνών (λόγω ενός ή και των δύο γονέων άνω των 70 ετών)";
+                calculatedBaseMonths = 9;
+                needsFamilyCert = true;
+            }
             else {
                 serviceDescription = "Πλήρη θητεία 12 μηνών"; // Default for all other cases
             }
 
             // --- Apply buyout logic if selected ---
             if (isBuyoutAttempted) {
+                // Check age for buyout eligibility
                 if (age < 33) {
                     serviceDescription = "Δεν έχετε δικαίωμα εξαγοράς θητείας λόγω ηλικίας (απαιτείται ηλικία 33 ετών και άνω)";
-                    documents = ["Αστυνομική ταυτότητα"]; 
-                } else if (isDayBasedService) {
-                    serviceDescription = `Έχετε δικαίωμα για ${over35 ? 'έκτιση θητείας 20 ημερών' : 'έκτιση θητείας (βάσει αρχικής διαμόρφωσης)'}. Η εξαγορά δεν εφαρμόζεται σε θητεία ημερών.`;
-                    // Documents for 20-day service (e.g., Βεβαίωση πολιτογράφησης if over35)
-                } else if (isNaN(daysServed) || daysServed < 20) {
-                    serviceDescription = "Παρακαλώ εισάγετε έγκυρο αριθμό ημερών που θα υπηρετήσετε για την εξαγορά (τουλάχιστον 20).";
                     documents = ["Αστυνομική ταυτότητα"];
+                } else if (isNaN(daysServed) || daysServed < 20) {
+                    document.getElementById('daysServedWarning').style.display = 'block';
+                    serviceDescription = "Παρακαλώ εισάγετε έγκυρο αριθμό ημερών που θα υπηρετήσετε για την εξαγορά (τουλάχιστον 20).";
+                    documents = ["Αστυνομική ταυτότητα"]; 
                 } else {
                     let totalBuyoutCost;
                     let paymentInfo;
-                    const daysInMilitaryMonth = 30; 
-
-                    // For buyout, the base months for calculation are:
-                    // - 6 for qualified FR (even if they would do 3 months actual service)
-                    // - If not FR, use their calculated reduced service months (if any), otherwise 12.
-                    let buyoutCalculationBaseMonths = 12; // Default
-                    if (qualifiesAsFR) { 
-                        buyoutCalculationBaseMonths = 6; 
-                    } else if (!isDayBasedService) { // If it's a month-based service (not 20 day)
-                        buyoutCalculationBaseMonths = calculatedBaseMonths;
-                    }
-
-
                     const monthlyRate = 810;
-                    totalBuyoutCost = calculateBuyoutCost(buyoutCalculationBaseMonths, daysServed, monthlyRate);
+                    
+                    // Determine the base months for buyout cost calculation
+                    let buyoutCalculationBaseMonthsForCost;
+                    if (over35) { // If over 35 and eligible, buyout base is 6 months
+                        buyoutCalculationBaseMonthsForCost = 6;
+                    } else if (qualifiesAsFR) { // If qualified FR, buyout base is 6 months
+                        buyoutCalculationBaseMonthsForCost = 6;
+                    } else { // Otherwise, it's based on their specific calculated reduction (3, 9, or 12)
+                        buyoutCalculationBaseMonthsForCost = calculatedBaseMonths;
+                    }
+
+                    totalBuyoutCost = calculateBuyoutCost(buyoutCalculationBaseMonthsForCost, daysServed, monthlyRate);
+                    
+                    // Determine payment periods based on buyout base months
                     let paymentPeriods;
-                    if (buyoutCalculationBaseMonths === 12) {
-                        paymentPeriods = 4; 
-                    } else if (buyoutCalculationBaseMonths === 6) { 
-                        paymentPeriods = 2; 
+                    if (buyoutCalculationBaseMonthsForCost === 12) {
+                        paymentPeriods = 4;
+                    } else if (buyoutCalculationBaseMonthsForCost === 6) {
+                        paymentPeriods = 2;
+                    } else if (buyoutCalculationBaseMonthsForCost === 3 || buyoutCalculationBaseMonthsForCost === 9) {
+                        paymentPeriods = 3;
+                    } else { 
+                        paymentPeriods = 1; // Fallback for unexpected calculatedBaseMonths
                     }
-                    else { // For 3 or 9 months calculatedBaseMonths
-                        paymentPeriods = 3; 
-                    }
+                    
                     const paymentAmount = Math.ceil(totalBuyoutCost / paymentPeriods);
-                    serviceDescription = `Εξαγορά θητείας ${buyoutCalculationBaseMonths} μηνών. Συνολικό κόστος: ${totalBuyoutCost}€`;
+                    serviceDescription = `Εξαγορά θητείας ${buyoutCalculationBaseMonthsForCost} μηνών. Συνολικό κόστος: ${totalBuyoutCost}€`;
                     paymentInfo = `<br>Το ποσό των ${totalBuyoutCost}€ πρέπει να καταβληθεί σε ${paymentPeriods} δόσεις των ${paymentAmount}€ η καθεμία.`;
-                    
                     serviceDescription += paymentInfo;
-                    
+
                     documents = [
-                        "Αστυνομική ταυτότητα", 
-                        "Αίτηση εξαγοράς θητείας", 
-                        "Αποδεικτικό πληρωμής ηλεκτρονικού παραβόλου" 
+                        "Αστυνομική ταυτότητα",
+                        "Αίτηση εξαγοράς θητείας",
+                        "Αποδεικτικό πληρωμής ηλεκτρονικού παραβόλου"
                     ];
-                    // Also add the FR specific documents if the foreignResident box was checked
-                    if (foreignResident) { 
+                    // Re-add FR specific documents if foreignResident box was checked
+                    if (foreignResident) {
                         documents.push(
                             "Αίτηση στη στρατολογία για μόνιμος κάτοικος εξωτερικού",
-                            "Ειδικό πιστοποιητικό της αρμόδιας Ελληνικής Προξενικής Αρχής (ισχύει για έξι μήνες από την ημερομηνία έκδοσής του)",
-                            "Λογαριασμοί κοινής ωφέλειας, τραπεζικά παραστατικά ή άλλα αποδεικτικά διαμονής που καλύπτουν το απαιτούμενο χρονικό διάστημα."
+                            "Ειδικό πιστοποιητικό της αρμόδιας Ελληνικής Προξενικής Αρχής (ισχύει για έξι μήνες από την ημερομηνία έκδοσής του)"
                         );
-                        if (yearsFinancial >= 7) {
-                            documents.push("Επιπλέον: Βεβαιώσεις εργοδοτών ή φορολογικές δηλώσεις για απόδειξη βιοποριστικής εγκατάστασης");
-                        }
                         if (bornAbroad) {
                             documents.push("Επιπλέον: Πιστοποιητικό γέννησης από το εξωτερικό");
                         }
                     }
+                    // Add specific document for over35 if applicable AND buyout is chosen
+                    if (over35) {
+                        documents.push("Πιστοποιητικό Γέννησης / Ταυτότητα για επιβεβαίωση ηλικίας");
+                    }
+                }
+            } else { // If buyout is NOT selected, determine required documents based on calculated service
+                if (calculatedBaseMonths === 12) {
+                    documents = fullServiceDocuments;
+                } else if (needsFamilyCert) {
+                    const familyCertDoc = "Πιστοποιητικό οικογενειακής κατάστασης για στρατολογική χρήση";
+                    if (!documents.includes(familyCertDoc)) {
+                        documents.push(familyCertDoc);
+                    }
+                }
+                // Add specific document for over35 if applicable AND NOT buyout
+                if (over35) {
+                    documents.push("Πιστοποιητικό Γέννησης / Ταυτότητα για επιβεβαίωση ηλικίας");
                 }
             }
 
-            if (calculatedBaseMonths === 12 && !isBuyoutAttempted) {
-                documents = fullServiceDocuments; 
-            } else if (needsFamilyCert) { 
-                const familyCertDoc = "Πιστοποιητικό οικογενειακής κατάστασης για στρατολογική χρήση"; 
-                if (!documents.includes(familyCertDoc)) {
-                    documents.push(familyCertDoc);
-                }
-            }
-            
             // Control visibility of the familyCertInfoBox
-            if (needsFamilyCert) { 
+            if (needsFamilyCert) {
                 document.getElementById('familyCertInfoBox').style.display = 'flex';
             } else {
                 document.getElementById('familyCertInfoBox').style.display = 'none';
             }
-            
+
             // Display results
             document.getElementById('serviceType').innerHTML = serviceDescription;
             const documentsList = document.getElementById('requiredDocuments');
@@ -944,25 +995,18 @@
                 li.textContent = doc;
                 documentsList.appendChild(li);
             });
-            
-            // Show reduced service info box for ANY non-12-month service (excluding 20-day, exemption, buyout which are handled differently)
-            // Also hide if it's the "No documents for full service" case
-            if ((calculatedBaseMonths > 0 && calculatedBaseMonths < 12 && !isDayBasedService) || (isBuyoutAttempted && documents.length > 0 && documents[0] !== fullServiceDocuments[0])) {
+
+            // Show reduced service info box if any non-full service documents are required
+            if (uniqueDocuments.length > 0 && !(uniqueDocuments.length === 1 && uniqueDocuments[0] === fullServiceDocuments[0])) {
                 document.getElementById('reducedServiceInfoBox').style.display = 'flex';
             } else {
                 document.getElementById('reducedServiceInfoBox').style.display = 'none';
             }
-
-            // Check if it's specifically the "no documents for full service" scenario to hide the detailed info boxes
-            if (documents.length === 1 && documents[0] === fullServiceDocuments[0]) {
-                document.getElementById('familyCertInfoBox').style.display = 'none';
-                document.getElementById('reducedServiceInfoBox').style.display = 'none';
-            }
-
-
+            
             document.getElementById('feedbackFormSection').style.display = 'block'; // Always show feedback after a calculation
             document.getElementById('result').style.display = 'block';
         }
+
         function clearForm() {
             // Reset all checkboxes
             const checkboxes = document.querySelectorAll('input[type="checkbox"]');
@@ -974,15 +1018,16 @@
             document.getElementById('childrenCount').value = '0';
             document.getElementById('age').value = '';
             document.getElementById('daysServed').value = '20';
-            document.getElementById('yearsFinancial').value = '0'; 
-            document.getElementById('yearsResidence').value = '0'; 
-            
+            document.getElementById('yearsFinancial').value = '0';
+            document.getElementById('yearsResidence').value = '0';
             // Hide all sub-groups
             document.getElementById('siblingsGroup').style.display = 'none';
             document.getElementById('childrenGroup').style.display = 'none';
             document.getElementById('spouseGroup').style.display = 'none';
-            document.getElementById('foreignResidentDetailsGroup').style.display = 'none'; 
+            document.getElementById('foreignResidentDetailsGroup').style.display = 'none';
+            // Hide warnings and buyout details
             document.getElementById('buyoutWarning').style.display = 'none';
+            document.getElementById('over35Warning').style.display = 'none'; 
             document.getElementById('buyoutDaysServedGroup').style.display = 'none';
             document.getElementById('daysServedWarning').style.display = 'none';
             // Hide result section and specific info box
@@ -991,11 +1036,12 @@
             document.getElementById('reducedServiceInfoBox').style.display = 'none';
             document.getElementById('feedbackFormSection').style.display = 'none';
         }
+
         // Initialize hidden groups on page load
         document.getElementById('siblingsGroup').style.display = 'none';
         document.getElementById('childrenGroup').style.display = 'none';
         document.getElementById('spouseGroup').style.display = 'none';
-        document.getElementById('foreignResidentDetailsGroup').style.display = 'none'; 
+        document.getElementById('foreignResidentDetailsGroup').style.display = 'none';
         document.getElementById('buyoutDaysServedGroup').style.display = 'none';
         document.getElementById('daysServedWarning').style.display = 'none';
     </script>
