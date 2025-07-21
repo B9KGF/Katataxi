@@ -788,7 +788,7 @@
             let serviceDescription = "";
             let calculatedBaseMonths = 12; // Default for full service
             let isBuyoutAttempted = buyout; 
-            let needsFamilyCert = false;
+            let needsFamilyCert = false; // Flag to determine if general family cert KEP info box is needed
             let fullServiceDocuments = ['Δεν απαιτούνται δικαιολογητικά για πλήρη θητεία'];
 
             // Determine if user can be considered a Foreign Resident for service reduction purposes
@@ -808,7 +808,7 @@
             // --- Exemption for 3+ children (Highest Priority among service-age cases) ---
             if (hasChildren && childrenCount >= 3) {
                 serviceDescription = "Απαλλαγή από στρατιωτική θητεία (λόγω 3+ ζώντων τέκνων)";
-                needsFamilyCert = true;
+                needsFamilyCert = true; // This specific exemption requires family cert
                 const familyCertDoc = "Πιστοποιητικό οικογενειακής κατάστασης για στρατολογική χρήση";
                 if (!documents.includes(familyCertDoc)) {
                     documents.push(familyCertDoc);
@@ -851,7 +851,15 @@
             } else if (militaryParentDied) { 
                 serviceDescription = "Θητεία 3 μηνών (λόγω θανάτου/τραυματισμού γονέα ή αδελφού σε υπηρεσία/τρομοκρατική επίθεση)";
                 calculatedBaseMonths = 3;
-                needsFamilyCert = true;
+                // Specific documents for this case, overriding generic needsFamilyCert
+                documents.push(
+                    "Αίτηση",
+                    "Βεβαίωση αρμόδιας αρχής (Ε.Δ./Σ.Α. ή δικαστικής/αστυνομικής) για θάνατο εν ώρα υπηρεσίας ή θάνατο/τραυματισμό από τρομοκρατική ενέργεια.",
+                    "Αντίγραφο πράξης απονομής σύνταξης/βοήθειας (ή Υπεύθυνη Δήλωση/αντίγραφο αίτησης αν εκκρεμεί).",
+                    "Πιστοποιητικό οικογενειακής κατάστασης από το δήμο όπου το πρόσωπο είχε την οικογενειακή μερίδα."
+                );
+                // This case handles its own family cert, so no need for the generic KEP info box.
+                needsFamilyCert = false; 
             } else if (qualifiesAsFR) {
                 serviceDescription = "Θητεία 6 μηνών ως Μόνιμος Κάτοικας Εξωτερικού (με πλήρωση κριτηρίων).<br><em><small>(Δυνατότητα τμηματικής θητείας σε μηνιαίες δόσεις)</small></em>";
                 calculatedBaseMonths = 6;
@@ -981,11 +989,20 @@
                     if (foreignMilitaryService) {
                         documents.push("Πιστοποιητικό κράτους που προκύπτετε ο βαθμός, η διάρκεια θητείας, η ειδικότητα, επικυρωμένο και μεταφρασμένο");
                     }
+                    // If militaryParentDied and buyout, add its documents (duplicates are handled by Set later)
+                    if (militaryParentDied) {
+                        documents.push(
+                            "Αίτηση",
+                            "Βεβαίωση αρμόδιας αρχής (Ε.Δ./Σ.Α. ή δικαστικής/αστυνομικής) για θάνατο εν ώρα υπηρεσίας ή θάνατο/τραυματισμό από τρομοκρατική ενέργεια.",
+                            "Αντίγραφο πράξης απονομής σύνταξης/βοήθειας (ή Υπεύθυνη Δήλωση/αντίγραφο αίτησης αν εκκρεμεί).",
+                            "Πιστοποιητικό οικογενειακής κατάστασης από το δήμο όπου το πρόσωπο είχε την οικογενειακή μερίδα."
+                        );
+                    }
                 }
             } else { // If buyout is NOT selected, determine required documents based on calculated service
                 if (calculatedBaseMonths === 12) {
                     documents = fullServiceDocuments;
-                } else if (needsFamilyCert) {
+                } else if (needsFamilyCert) { // Generic family cert applies here (e.g. for children, siblings, single mother)
                     const familyCertDoc = "Πιστοποιητικό οικογενειακής κατάστασης για στρατολογική χρήση";
                     if (!documents.includes(familyCertDoc)) {
                         documents.push(familyCertDoc);
@@ -1002,7 +1019,8 @@
             }
 
             // Control visibility of the familyCertInfoBox
-            if (needsFamilyCert) {
+            // Show if any condition requiring generic family cert is met
+            if (needsFamilyCert || (hasChildren && childrenCount >=3)) { // Needs family cert for 3+ children exemption
                 document.getElementById('familyCertInfoBox').style.display = 'flex';
             } else {
                 document.getElementById('familyCertInfoBox').style.display = 'none';
