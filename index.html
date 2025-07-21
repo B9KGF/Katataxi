@@ -448,7 +448,7 @@
                             </label>
                              <label>
                                 <input type="checkbox" id="bornAbroad">
-                                Είμαι γεννηθείς εξωτερικού
+                                Έχω γεννηθεί στο εξωτερικό
                             </label>
                             <p class="info-text">
                                 <i class="fas fa-info-circle"></i> Για να θεωρηθείτε Μόνιμος Κάτοικας Εξωτερικού και να δικαιούστε μειωμένη θητεία, εκτός από 11 έτη διαμονής ή 7 έτη βιοποριστικής εγκατάστασης, δεν πρέπει να έχετε διαμείνει στην Ελλάδα για χρονικό διάστημα μεγαλύτερο των 6 μηνών ανά έτος.
@@ -532,7 +532,7 @@
                         </label>
                         <label>
                             <input type="checkbox" id="militaryParentDied">
-                            Γονέας στρατιωτικός που πέθανε εν ώρα υπηρεσίας
+                            Γονέας ή αδελφός που πέθανε εν ώρα υπηρεσίας στις ΕΙ, ΣΑ ή τραυματίστηκε/απεβίωσε από τρομοκρατική επίθεση
                         </label>
                     </div>
                     <!---------------------------->
@@ -570,6 +570,22 @@
                     </div>
                 </div>
             </div>
+            <!-- OTHER CRITERIA SECTION -->
+            <div class="section active section-fixed-open">
+                <div class="section-header">
+                    <i class="fas fa-info-circle"></i>
+                    <span>Λοιπά Κριτήρια</span>
+                </div>
+                <div class="section-content">
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="foreignMilitaryService">
+                            Έχω υπηρετήσει σε κράτος που δεν ανήκει στο συμμαχικό στρατό (NATO) ή στην Ευρωπαϊκή Ένωση (ΕΕ)
+                        </label>
+                    </div>
+                </div>
+            </div>
+
             <div class="button-container">
                 <button class="calculate-btn" onclick="calculateService()">
                     <i class="fas fa-calculator"></i> Υπολογισμός Θητείας
@@ -592,7 +608,7 @@
                         Για την έκδοση του <span class="highlight">πιστοποιητικού οικογενειακής κατάστασης για στρατολογική χρήση</span>, απευθυνθείτε σε ΚΕΠ (Κέντρο Εξυπηρέτησης Πολιτών) ή στον δήμο στον οποίο ανήκετε. Μην ξεχάσετε να ζητήσετε συγκεκριμένα τη βεβαίωση για στρατολογική χρήση!
                     </div>
                 </div>
-                <!-- NEW INFO BOX FOR REDUCED SERVICE -->
+                <!-- INFO BOX FOR REDUCED SERVICE -->
                 <div id="reducedServiceInfoBox" class="info-box">
                     <i class="fas fa-info-circle"></i>
                     <div>
@@ -602,7 +618,7 @@
                         Η δια ζώσης υποβολή γίνεται σε ΚΕΠ ή σε Στρατολογική Υπηρεσία (ΣΥ). Εκεί καταθέτετε τα απαραίτητα δικαιολογητικά και αναμένετε την έγκριση από τη στρατολογική υπηρεσία στην οποία ανήκετε.
                     </div>
                 </div>
-                <!-- NEW FEEDBACK FORM SECTION -->
+                <!-- FEEDBACK FORM SECTION -->
                 <div id="feedbackFormSection">
                     <p style="margin-bottom: 10px;">Η γνώμη σας είναι σημαντική! Για να μας βοηθήσετε να βελτιώσουμε την εφαρμογή, παρακαλώ συμπληρώστε την παρακάτω φόρμα ανατροφοδότησης:</p>
                     <button class="feedback-button" onclick="window.open('https://forms.gle/3qbzWcVj5ENL2sD4A', '_blank');">
@@ -616,7 +632,7 @@
         </div>
     </div>
     <footer>
-        <p>© 2025 ΣΤΡ (ΠΖ) Καραθανασόπουλος Γεώργιος υπό την καθοδήγηση του γραφείου στρατολογίας ΚΕΠΒ-ΚΕΝ Θήβας| Αυτό το εργαλείο παρέχεται για ενημερωτικούς σκοπούς</p>
+        <p>© 2025 ΣΤΡ (ΠΖ) Καραθανασόπουλος Γεώργιος | Αυτό το εργαλείο παρέχεται για ενημερωτικούς σκοπούς</p>
     </footer>
     <script>
         // Helper function to calculate buyout cost
@@ -736,14 +752,14 @@
             const oneParentDead = document.getElementById('oneParentDead').checked;
             const oneParentDisabled = document.getElementById('oneParentDisabled').checked;
             const singleMother = document.getElementById('singleMother').checked;
-            const militaryParentDied = document.getElementById('militaryParentDied').checked;
-            // Get checkbox for parents over 70
+            const militaryParentDied = document.getElementById('militaryParentDied').checked; 
             const oneOrBothParentsOver70 = document.getElementById('oneOrBothParentsOver70').checked;
             const hasChildren = document.getElementById('hasChildren').checked;
             const childrenCount = hasChildren ? parseInt(document.getElementById('childrenCount').value) : 0;
             const isMarried = document.getElementById('isMarried').checked;
             const spouseDisabled = isMarried && document.getElementById('spouseDisabled').checked;
             const over35 = document.getElementById('over35').checked; 
+            const foreignMilitaryService = document.getElementById('foreignMilitaryService').checked; 
             const daysServed = parseInt(document.getElementById('daysServed').value);
 
             // Clear any previous warnings and info boxes
@@ -784,12 +800,9 @@
             // Add FR specific documents if the checkbox is checked
             if (foreignResident) {
                 documents.push(
-                    "Αίτηση στη στρατολογία για μόνιμος κάτοικος εξωτερικού",
+                    "Αίτηση στη στρατολογία για μόνιμος κάτοικας εξωτερικού",
                     "Ειδικό πιστοποιητικό της αρμόδιας Ελληνικής Προξενικής Αρχής (ισχύει για έξι μήνες από την ημερομηνία έκδοσής του)"
                 );
-                if (bornAbroad) {
-                    documents.push("Επιπλέον: Πιστοποιητικό γέννησης από το εξωτερικό");
-                }
             }
 
             // --- Exemption for 3+ children (Highest Priority among service-age cases) ---
@@ -819,21 +832,24 @@
 
             // --- Determine "base" duration of service, before considering buyout ---
             // Hierarchy of service reductions (from shortest to longest duration, then family status):
-            // 3 months: FR Born Abroad, Military Parent Died
-            // 6 months: Over 35, FR with criteria, 2 Children, 3+ Siblings, Both Parents Dead, Both Parents Disabled
+            // 3 months: FR Born Abroad, Military Parent/Sibling Died/Injured
+            // 6 months: Over 35, Served Abroad Non-NATO/EU, FR with criteria, 2 Children, 3+ Siblings, Both Parents Dead, Both Parents Disabled
             // 9 months: 1 Child, 2 Siblings, Single Mother, One Parent Dead, One Parent Disabled, Spouse Disabled, One/Both Parents Over 70
             // 12 months: Default
             
             if (over35) { 
                 serviceDescription = "Θητεία 6 μηνών λόγω ηλικίας (35+).";
                 calculatedBaseMonths = 6;
-                needsFamilyCert = true; 
                 documents.push("Πιστοποιητικό Γέννησης / Ταυτότητα για επιβεβαίωση ηλικίας");
+            } else if (foreignMilitaryService) { 
+                serviceDescription = "Θητεία 6 μηνών (λόγω υπηρεσίας σε ξένο στρατό εκτός ΝΑΤΟ/ΕΕ).";
+                calculatedBaseMonths = 6;
+                documents.push("Πιστοποιητικό κράτους που προκύπτει ο βαθμός, η διάρκεια θητείας, η ειδικότητα, επικυρωμένο και μεταφρασμένο");
             } else if (qualifiesAsFR && bornAbroad) {
                 serviceDescription = "Θητεία 3 μηνών ως Μόνιμος Κάτοικας Εξωτερικού (γεννηθείς εξωτερικού, με πλήρωση κριτηρίων).<br><em><small>(Δυνατότητα τμηματικής θητείας σε μηνιαίες δόσεις)</small></em>";
                 calculatedBaseMonths = 3;
-            } else if (militaryParentDied) {
-                serviceDescription = "Θητεία 3 μηνών (λόγω γονέα στρατιωτικού που πέθανε εν ώρα υπηρεσίας)";
+            } else if (militaryParentDied) { 
+                serviceDescription = "Θητεία 3 μηνών (λόγω θανάτου/τραυματισμού γονέα ή αδελφού σε υπηρεσία/τρομοκρατική επίθεση)";
                 calculatedBaseMonths = 3;
                 needsFamilyCert = true;
             } else if (qualifiesAsFR) {
@@ -916,11 +932,13 @@
                     
                     // Determine the base months for buyout cost calculation
                     let buyoutCalculationBaseMonthsForCost;
-                    if (over35) { // If over 35 and eligible, buyout base is 6 months
+                    if (over35) { 
                         buyoutCalculationBaseMonthsForCost = 6;
-                    } else if (qualifiesAsFR) { // If qualified FR, buyout base is 6 months
+                    } else if (qualifiesAsFR) { 
                         buyoutCalculationBaseMonthsForCost = 6;
-                    } else { // Otherwise, it's based on their specific calculated reduction (3, 9, or 12)
+                    } else if (foreignMilitaryService) { 
+                        buyoutCalculationBaseMonthsForCost = 6;
+                    } else { 
                         buyoutCalculationBaseMonthsForCost = calculatedBaseMonths;
                     }
 
@@ -951,16 +969,17 @@
                     // Re-add FR specific documents if foreignResident box was checked
                     if (foreignResident) {
                         documents.push(
-                            "Αίτηση στη στρατολογία για μόνιμος κάτοικος εξωτερικού",
+                            "Αίτηση στη στρατολογία για μόνιμος κάτοικας εξωτερικού",
                             "Ειδικό πιστοποιητικό της αρμόδιας Ελληνικής Προξενικής Αρχής (ισχύει για έξι μήνες από την ημερομηνία έκδοσής του)"
                         );
-                        if (bornAbroad) {
-                            documents.push("Επιπλέον: Πιστοποιητικό γέννησης από το εξωτερικό");
-                        }
                     }
                     // Add specific document for over35 if applicable AND buyout is chosen
                     if (over35) {
                         documents.push("Πιστοποιητικό Γέννησης / Ταυτότητα για επιβεβαίωση ηλικίας");
+                    }
+                    // Add specific document for foreign military service if applicable AND buyout is chosen
+                    if (foreignMilitaryService) {
+                        documents.push("Πιστοποιητικό κράτους που προκύπτετε ο βαθμός, η διάρκεια θητείας, η ειδικότητα, επικυρωμένο και μεταφρασμένο");
                     }
                 }
             } else { // If buyout is NOT selected, determine required documents based on calculated service
@@ -975,6 +994,10 @@
                 // Add specific document for over35 if applicable AND NOT buyout
                 if (over35) {
                     documents.push("Πιστοποιητικό Γέννησης / Ταυτότητα για επιβεβαίωση ηλικίας");
+                }
+                // Add specific document for foreign military service if applicable AND NOT buyout
+                if (foreignMilitaryService) {
+                    documents.push("Πιστοποιητικό κράτους που προκύπτει ο βαθμός, η διάρκεια θητείας, η ειδικότητα, επικυρωμένο και μεταφρασμένο");
                 }
             }
 
