@@ -106,8 +106,6 @@
         .section-fixed-open .section-header {
             cursor: default;
         }
-
-
         .form-group {
             margin-bottom: 20px;
             padding-bottom: 15px;
@@ -493,6 +491,10 @@
                             <label>
                                 Αριθμός ζωντανών αδελφών: <input type="number" id="siblingsCount" min="0" value="0">
                             </label>
+                            <label> <!-- Requirement 8: New checkbox for disabled sibling -->
+                                <input type="checkbox" id="brotherDisabled">
+                                Έχω αδελφό που έχει ≥67% αναπηρία
+                            </label>
                         </div>
                     </div>
                     <!-- REORGANIZED PARENT STATUS GROUP -->
@@ -585,7 +587,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="button-container">
                 <button class="calculate-btn" onclick="calculateService()">
                     <i class="fas fa-calculator"></i> Υπολογισμός Θητείας
@@ -615,7 +616,8 @@
                         <u>Η προθεσμία υποβολής αιτημάτων είναι μέχρι 1 μήνα πριν την απόλυσή σας.</u> <br><br>
                         Σας προτείνουμε να συγκεντρώσετε άμεσα τα απαιτούμενα δικαιολογητικά και να τα καταθέσετε κατά την άδεια ορκωμοσίας σας. <br><br>
                         Η υποβολή αιτημάτων γίνεται ηλεκτρονικά μέσω του <a href="https://www.stratologia.gr" target="_blank" style="color: #1890ff; text-decoration: none;">www.stratologia.gr</a> → υποβολή αιτημάτων → αιτήσεις → κατάταξη → μείωση στρατιωτικής θητείας. Εκεί ανεβάζετε τα απαραίτητα δικαιολογητικά και αναμένετε την έγκριση από τη στρατολογική υπηρεσία στην οποία ανήκετε. <br><br>
-                        Η δια ζώσης υποβολή γίνεται σε ΚΕΠ ή σε Στρατολογική Υπηρεσία (ΣΥ). Εκεί καταθέτετε τα απαραίτητα δικαιολογητικά και αναμένετε την έγκριση από τη στρατολογική υπηρεσία στην οποία ανήκετε.
+                        Η δια ζώσης υποβολή γίνεται σε ΚΕΠ ή σε Στρατολογική Υπηρεσία (ΣΥ). Εκεί καταθέτετε τα απαραίτητα δικαιολογητικά και αναμένετε την έγκριση από τη στρατολογική υπηρεσία στην οποία ανήκετε.<br><br> <!-- Added <br><br> for gap -->
+                        Για περισσότερες πληροφορίες και τυχόν ενημερώσεις, ανατρέξτε στο <a href="https://www.stratologia.gr/sites/default/files/plhr_ent/1.pdf" target="_blank" style="color: #1890ff; text-decoration: none;">επίσημο έγγραφο της Στρατολογίας (Φ.424/16/275306/Σ.2789)</a>.
                     </div>
                 </div>
                 <!-- FEEDBACK FORM SECTION -->
@@ -628,7 +630,7 @@
             </div>
         </div>
         <div class="disclaimer">
-            <p><i class="fas fa-exclamation-circle"></i> Αυτό το εργαλείο παρέχεται για ενημερωτικούς σκοπούς. Για ακριβείς πληροφορίες, επικοινωνήστε με την αρμόδια στρατολογική υπηρεσία. <span style="font-size: 0.8em; opacity: 0.8;">v0.9.5.5</span></p>
+            <p><i class="fas fa-exclamation-circle"></i> Αυτό το εργαλείο παρέχεται για ενημερωτικούς σκοπούς. Για ακριβείς πληροφορίες, επικοινωνήστε με την αρμόδια στρατολογική υπηρεσία. <span style="font-size: 0.8em; opacity: 0.8;">v0.9.6</span></p>
         </div>
     </div>
     <footer>
@@ -644,11 +646,9 @@
             if (daysToPayFor < 0) daysToPayFor = 0; // Cannot pay for negative days
             const buyoutMonths = Math.floor(daysToPayFor / daysInMilitaryMonth);
             const buyoutRemainingDays = daysToPayFor % daysInMilitaryMonth;
-            // Updated calculation: Use monthlyRate for full months, and dailyRate for remaining days.
             const cost = (buyoutMonths * monthlyRate) + (buyoutRemainingDays * dailyRate);
             return Math.ceil(cost);
         }
-
         // Toggle section visibility only for collapsible sections
         const collapsibleSections = document.querySelectorAll('.section:not(.section-fixed-open)');
         collapsibleSections.forEach(section => {
@@ -657,7 +657,6 @@
                 section.classList.toggle('active');
             });
         });
-
         // Show/hide sub-groups based on checkbox status
         document.getElementById('hasSiblings').addEventListener('change', function() {
             document.getElementById('siblingsGroup').style.display = this.checked ? 'block' : 'none';
@@ -668,7 +667,6 @@
         document.getElementById('isMarried').addEventListener('change', function() {
             document.getElementById('spouseGroup').style.display = this.checked ? 'block' : 'none';
         });
-
         // Show/hide foreign resident details based on checkbox status
         document.getElementById('foreignResident').addEventListener('change', function() {
             document.getElementById('foreignResidentDetailsGroup').style.display = this.checked ? 'block' : 'none';
@@ -679,14 +677,12 @@
                 document.getElementById('bornAbroad').checked = false;
             }
         });
-
         // Function to check and control buyout eligibility based on age
         function checkBuyoutEligibility() {
             const age = parseInt(document.getElementById('age').value);
             const buyoutCheckbox = document.getElementById('buyout');
             const buyoutWarning = document.getElementById('buyoutWarning');
             const buyoutDaysServedGroup = document.getElementById('buyoutDaysServedGroup');
-            
             if (buyoutCheckbox.checked) {
                 if (isNaN(age) || age < 33) {
                     buyoutWarning.style.display = 'block';
@@ -705,13 +701,11 @@
                 document.getElementById('daysServedWarning').style.display = 'none';
             }
         }
-
         // Function to check and control over35 eligibility based on age
         function checkOver35Eligibility() {
             const age = parseInt(document.getElementById('age').value);
             const over35Checkbox = document.getElementById('over35');
             const over35Warning = document.getElementById('over35Warning');
-
             if (over35Checkbox.checked) {
                 if (isNaN(age) || age < 35) {
                     over35Warning.style.display = 'block';
@@ -723,17 +717,13 @@
                 over35Warning.style.display = 'none';
             }
         }
-
         // Event listeners for age and relevant checkboxes
         document.getElementById('age').addEventListener('input', function() {
             checkBuyoutEligibility();
             checkOver35Eligibility();
         });
-
         document.getElementById('buyout').addEventListener('change', checkBuyoutEligibility);
         document.getElementById('over35').addEventListener('change', checkOver35Eligibility);
-
-
         function calculateService() {
             // Get values from form inputs
             const ageInput = document.getElementById('age').value;
@@ -745,6 +735,7 @@
             const bornAbroad = foreignResident ? document.getElementById('bornAbroad').checked : false;
             const hasSiblings = document.getElementById('hasSiblings').checked;
             const siblingsCount = hasSiblings ? parseInt(document.getElementById('siblingsCount').value) : 0;
+            const brotherDisabled = hasSiblings ? document.getElementById('brotherDisabled').checked : false; // Requirement 8
             const marriedParents = document.getElementById('marriedParents').checked;
             const divorcedParents = document.getElementById('divorcedParents').checked;
             const bothParentsDead = document.getElementById('bothParentsDead').checked;
@@ -752,16 +743,15 @@
             const oneParentDead = document.getElementById('oneParentDead').checked;
             const oneParentDisabled = document.getElementById('oneParentDisabled').checked;
             const singleMother = document.getElementById('singleMother').checked;
-            const militaryParentDied = document.getElementById('militaryParentDied').checked; 
+            const militaryParentDied = document.getElementById('militaryParentDied').checked;
             const oneOrBothParentsOver70 = document.getElementById('oneOrBothParentsOver70').checked;
             const hasChildren = document.getElementById('hasChildren').checked;
             const childrenCount = hasChildren ? parseInt(document.getElementById('childrenCount').value) : 0;
             const isMarried = document.getElementById('isMarried').checked;
             const spouseDisabled = isMarried && document.getElementById('spouseDisabled').checked;
-            const over35 = document.getElementById('over35').checked; 
-            const foreignMilitaryService = document.getElementById('foreignMilitaryService').checked; 
+            const over35 = document.getElementById('over35').checked;
+            const foreignMilitaryService = document.getElementById('foreignMilitaryService').checked;
             const daysServed = parseInt(document.getElementById('daysServed').value);
-
             // Clear any previous warnings and info boxes
             document.getElementById('buyoutWarning').style.display = 'none';
             document.getElementById('over35Warning').style.display = 'none';
@@ -769,50 +759,44 @@
             document.getElementById('familyCertInfoBox').style.display = 'none';
             document.getElementById('reducedServiceInfoBox').style.display = 'none';
             document.getElementById('feedbackFormSection').style.display = 'none';
-
             // --- Age Validation & Exemption for 45+ ---
             if (isNaN(age) || age < 18) {
                 document.getElementById('serviceType').innerHTML = `<span class="error-highlight">Παρακαλώ εισάγετε έγκυρη ηλικία (τουλάχιστον 18 ετών).</span>`;
                 document.getElementById('requiredDocuments').innerHTML = '';
                 document.getElementById('result').style.display = 'block';
                 return;
-            } else if (age >= 45) {
-                document.getElementById('serviceType').innerHTML = `Απαλλαγή από στρατιωτική θητεία (λόγου ηλικίας 45+).<br><span style="font-size: 0.9em; color: #555;">Να καλέσει τη στρατολογική υπηρεσία στην οποία ανήκει για να το διευθετήσει.</span>`;
-                document.getElementById('requiredDocuments').innerHTML = `<li>Αστυνομική ταυτότητα</li>`;
-                document.getElementById('result').style.display = 'block';
-                document.getElementById('feedbackFormSection').style.display = 'block';
-                return;
             }
-
-            let documents = ["Αστυνομική ταυτότητα"];
             let serviceDescription = "";
             let calculatedBaseMonths = 12; // Default for full service
-            let isBuyoutAttempted = buyout; 
+            let isBuyoutAttempted = buyout;
             let needsFamilyCert = false; // Flag to determine if general family cert KEP info box is needed
-            let fullServiceDocuments = ['Δεν απαιτούνται δικαιολογητικά για πλήρη θητεία'];
-
             // Determine if user can be considered a Foreign Resident for service reduction purposes
             let qualifiesAsFR = false;
             if (foreignResident && (yearsFinancial >= 7 || yearsResidence >= 11)) {
                 qualifiesAsFR = true;
             }
-
-            // Add FR specific documents if the checkbox is checked
-            if (foreignResident) {
-                documents.push(
-                    "Αίτηση στη στρατολογία για μόνιμος κάτοικας εξωτερικού",
-                    "Ειδικό πιστοποιητικό της αρμόδιας Ελληνικής Προξενικής Αρχής (ισχύει για έξι μήνες από την ημερομηνία έκδοσής του)"
-                );
+            // --- Document Management Initialization (Requirement 6) ---
+            let documents = []; // Will collect all relevant documents
+            if (age >= 45) {
+                serviceDescription = `Απαλλαγή από στρατιωτική θητεία (λόγου ηλικίας 45+).<br><span style="font-size: 0.9em; color: #555;">Να καλέσει τη στρατολογική υπηρεσία στην οποία ανήκει για να το διευθετήσει.</span>`;
+                documents.push("Αστυνομική ταυτότητα");
+                document.getElementById('serviceType').innerHTML = serviceDescription;
+                const uniqueDocuments = [...new Set(documents)];
+                document.getElementById('requiredDocuments').innerHTML = '';
+                uniqueDocuments.forEach(doc => {
+                    const li = document.createElement('li');
+                    li.textContent = doc;
+                    document.getElementById('requiredDocuments').appendChild(li);
+                });
+                document.getElementById('result').style.display = 'block';
+                document.getElementById('feedbackFormSection').style.display = 'block';
+                return; // Exit early for 45+ exemption
             }
-
             // --- Exemption for 3+ children (Highest Priority among service-age cases) ---
             if (hasChildren && childrenCount >= 3) {
                 serviceDescription = "Απαλλαγή από στρατιωτική θητεία (λόγω 3+ ζώντων τέκνων)";
                 needsFamilyCert = true; // This specific exemption requires family cert
-                const familyCertDoc = "Πιστοποιητικό οικογενειακής κατάστασης για στρατολογική χρήση";
-                if (!documents.includes(familyCertDoc)) {
-                    documents.push(familyCertDoc);
-                }
+                documents.push("Αίτηση", "Αστυνομική ταυτότητα", "Πιστοποιητικό οικογενειακής κατάστασης για στρατολογική χρήση"); // Requirement 6 and specific doc
                 if (isBuyoutAttempted) {
                      serviceDescription += "<br><span class='error-highlight'>Σημείωση: Δεδομένης της απαλλαγής σας, η επιλογή εξαγοράς δεν εφαρμόζεται.</span>";
                 }
@@ -829,225 +813,233 @@
                 document.getElementById('feedbackFormSection').style.display = 'block';
                 return;
             }
-
-            // --- Determine "base" duration of service, before considering buyout ---
+            // Determine "base" duration of service, before considering buyout ---
             // Hierarchy of service reductions (from shortest to longest duration, then family status):
             // 3 months: FR Born Abroad, Military Parent/Sibling Died/Injured
-            // 6 months: Over 35, Served Abroad Non-NATO/EU, FR with criteria, 2 Children, 3+ Siblings, Both Parents Dead, Both Parents Disabled
-            // 9 months: 1 Child, 2 Siblings, Single Mother, One Parent Dead, One Parent Disabled, Spouse Disabled, One/Both Parents Over 70
+            // 6 months: Over 35, Served Abroad Non-NATO/EU, FR with criteria, 2 Children, 3+ Siblings, Both Parents Dead, Both Parents Disabled, One Parent Disabled AND One Parent Dead, Spouse Disabled, Disabled Brother
+            // 9 months: 1 Child, 2 Siblings, Single Mother, One Parent Dead, One Parent Disabled, One/Both Parents Over 70
             // 12 months: Default
-            
-            if (over35) { 
-                serviceDescription = "Θητεία 6 μηνών λόγω ηλικίας (35+).";
-                calculatedBaseMonths = 6;
-                documents.push("Πιστοποιητικό Γέννησης / Ταυτότητα για επιβεβαίωση ηλικίας");
-            } else if (foreignMilitaryService) { 
-                serviceDescription = "Θητεία 6 μηνών (λόγω υπηρεσίας σε ξένο στρατό εκτός ΝΑΤΟ/ΕΕ).";
-                calculatedBaseMonths = 6;
-                documents.push("Πιστοποιητικό κράτους που προκύπτει ο βαθμός, η διάρκεια θητείας, η ειδικότητα, επικυρωμένο και μεταφρασμένο");
-            } else if (qualifiesAsFR && bornAbroad) {
-                serviceDescription = "Θητεία 3 μηνών ως Μόνιμος Κάτοικας Εξωτερικού (γεννηθείς εξωτερικού, με πλήρωση κριτηρίων).<br><em><small>(Δυνατότητα τμηματικής θητείας σε μηνιαίες δόσεις)</small></em>";
-                calculatedBaseMonths = 3;
-            } else if (militaryParentDied) { 
+            if (militaryParentDied) {
                 serviceDescription = "Θητεία 3 μηνών (λόγω θανάτου/τραυματισμού γονέα ή αδελφού σε υπηρεσία/τρομοκρατική επίθεση)";
                 calculatedBaseMonths = 3;
                 // Specific documents for this case, overriding generic needsFamilyCert
                 documents.push(
-                    "Αίτηση",
+                    "Αίτηση", // Requirement 6
+                    "Αστυνομική ταυτότητα", // Requirement 6
                     "Βεβαίωση αρμόδιας αρχής (Ε.Δ./Σ.Α. ή δικαστικής/αστυνομικής) για θάνατο εν ώρα υπηρεσίας ή θάνατο/τραυματισμό από τρομοκρατική ενέργεια.",
                     "Αντίγραφο πράξης απονομής σύνταξης/βοήθειας (ή Υπεύθυνη Δήλωση/αντίγραφο αίτησης αν εκκρεμεί).",
                     "Πιστοποιητικό οικογενειακής κατάστασης από το δήμο όπου το πρόσωπο είχε την οικογενειακή μερίδα."
                 );
-                // This case handles its own family cert, so no need for the generic KEP info box.
-                needsFamilyCert = false; 
-            } else if (qualifiesAsFR) {
-                serviceDescription = "Θητεία 6 μηνών ως Μόνιμος Κάτοικας Εξωτερικού (με πλήρωση κριτηρίων).<br><em><small>(Δυνατότητα τμηματικής θητείας σε μηνιαίες δόσεις)</small></em>";
+                needsFamilyCert = false; // This case handles its own family cert
+            } else if (qualifiesAsFR && bornAbroad) {
+                serviceDescription = "Θητεία 3 μηνών ως Μόνιμος Κάτοικας Εξωτερικού (γεννηθείς εξωτερικού, με πλήρωση κριτηρίων).<br><em><small>(Δυνατότητα τμηματικής θητείας)</small></em>"; // Requirement 2
+                calculatedBaseMonths = 3;
+                documents.push("Αίτηση", "Αστυνομική ταυτότητα"); // Requirement 6
+            } else if (over35) {
+                serviceDescription = "Θητεία 6 μηνών λόγω ηλικίας (35+).";
                 calculatedBaseMonths = 6;
+                documents.push("Αίτηση", "Αστυνομική ταυτότητα"); // Requirement 6
+                // Requirement 1: Removed specific age verification doc for ages > 33
+            } else if (foreignMilitaryService) {
+                serviceDescription = "Θητεία 6 μηνών (λόγω υπηρεσίας σε ξένο στρατό εκτός ΝΑΤΟ/ΕΕ για ≥6 μήνες)."; // Requirement 4 & 3
+                calculatedBaseMonths = 6;
+                documents.push(
+                    "Αίτηση", // Requirement 6
+                    "Αστυνομική ταυτότητα", // Requirement 6
+                    "Πιστοποιητικό κράτους που προκύπτει ο βαθμός, η διάρκεια θητείας, η ειδικότητα, επικυρωμένο και μεταφρασμένο"
+                );
+            } else if (qualifiesAsFR) {
+                serviceDescription = "Θητεία 6 μηνών ως Μόνιμος Κάτοικας Εξωτερικού (με πλήρωση κριτηρίων).<br><em><small>(Δυνατότητα τμηματικής θητείας)</small></em>"; // Requirement 2
+                calculatedBaseMonths = 6;
+                documents.push("Αίτηση", "Αστυνομική ταυτότητα"); // Requirement 6
             } else if (hasChildren && childrenCount == 2) {
                 serviceDescription = "Θητεία 6 μηνών (λόγω 2 ζώντων τέκνων)";
                 calculatedBaseMonths = 6;
+                documents.push("Αίτηση", "Αστυνομική ταυτότητα"); // Requirement 6
                 needsFamilyCert = true;
-            }
-            else if (siblingsCount >= 3) {
+            } else if (siblingsCount >= 3) {
                 serviceDescription = "Θητεία 6 μηνών (λόγω 3+ ζώντων αδελφών)";
                 calculatedBaseMonths = 6;
+                documents.push("Αίτηση", "Αστυνομική ταυτότητα"); // Requirement 6
                 needsFamilyCert = true;
-            }
-            else if (bothParentsDead) {
+            } else if (bothParentsDead) {
                 serviceDescription = "Θητεία 6 μηνών (λόγω θανάτου και των δύο γονέων)";
                 calculatedBaseMonths = 6;
+                documents.push("Αίτηση", "Αστυνομική ταυτότητα"); // Requirement 6
                 needsFamilyCert = true;
-            }
-            else if (bothParentsDisabled) {
+            } else if (bothParentsDisabled) {
                 serviceDescription = "Θητεία 6 μηνών (λόγω αναπηρίας και των δύο γονέων)";
                 calculatedBaseMonths = 6;
+                documents.push("Αίτηση", "Αστυνομική ταυτότητα"); // Requirement 6
                 needsFamilyCert = true;
+            } else if (oneParentDisabled && oneParentDead) { // Requirement 5: Specific check for 6 months
+                serviceDescription = "Θητεία 6 μηνών (λόγω θανάτου ενός γονέα και αναπηρίας άλλου γονέα)"; // Requirement 1
+                calculatedBaseMonths = 6;
+                documents.push("Αίτηση", "Αστυνομική ταυτότητα"); // Requirement 6
+                needsFamilyCert = true;
+            } else if (isMarried && spouseDisabled) { // Requirement 7: Spouse disabled is 6 months
+                serviceDescription = "Θητεία 6 μηνών (λόγω συζύγου με αναπηρία)";
+                calculatedBaseMonths = 6;
+                documents.push("Αίτηση", "Αστυνομική ταυτότητα"); // Requirement 6
+                needsFamilyCert = true;
+            } else if (brotherDisabled) { // Requirement 8: Disabled brother is 6 months
+                serviceDescription = "Θητεία 6 μηνών (λόγω αδελφού/ής με αναπηρία)";
+                calculatedBaseMonths = 6;
+                documents.push("Αίτηση", "Αστυνομική ταυτότητα"); // Requirement 6
+                needsFamilyCert = true; // Family cert needed for sibling status
             }
             // 9-month cases
             else if (hasChildren && childrenCount == 1) {
                 serviceDescription = "Θητεία 9 μηνών (λόγω 1 ζώντος τέκνου)";
                 calculatedBaseMonths = 9;
+                documents.push("Αίτηση", "Αστυνομική ταυτότητα"); // Requirement 6
                 needsFamilyCert = true;
             }
             else if (siblingsCount == 2) {
                 serviceDescription = "Θητεία 9 μηνών (λόγω 2 ζώντων αδελφών)";
                 calculatedBaseMonths = 9;
+                documents.push("Αίτηση", "Αστυνομική ταυτότητα"); // Requirement 6
                 needsFamilyCert = true;
             }
             else if (singleMother) {
-                serviceDescription = "Θητεία 9 μηνών (λόγω μόνου ή μεγαλύτερου γιου άγαμης μητέρας)";
+                serviceDescription = "Θητεία 9 μηνών (λόγο μόνου ή μεγαλύτερου γιου άγαμης μητέρας)";
                 calculatedBaseMonths = 9;
+                documents.push("Αίτηση", "Αστυνομική ταυτότητα"); // Requirement 6
                 needsFamilyCert = true;
             }
             else if (oneParentDead) {
                 serviceDescription = "Θητεία 9 μηνών (λόγω θανάτου ενός γονέα)";
                 calculatedBaseMonths = 9;
+                documents.push("Αίτηση", "Αστυνομική ταυτότητα"); // Requirement 6
                 needsFamilyCert = true;
             }
             else if (oneParentDisabled) {
                 serviceDescription = "Θητεία 9 μηνών (λόγω αναπηρίας ενός γονέα)";
                 calculatedBaseMonths = 9;
+                documents.push("Αίτηση", "Αστυνομική ταυτότητα"); // Requirement 6
                 needsFamilyCert = true;
             }
-            else if (isMarried && spouseDisabled) {
-                serviceDescription = "Θητεία 9 μηνών (λόγω συζύγου με αναπηρία)";
-                calculatedBaseMonths = 9;
-                needsFamilyCert = true;
-            }
-            else if (oneOrBothParentsOver70) { 
+            else if (oneOrBothParentsOver70) {
                 serviceDescription = "Θητεία 9 μηνών (λόγω ενός ή και των δύο γονέων άνω των 70 ετών)";
                 calculatedBaseMonths = 9;
+                documents.push("Αίτηση", "Αστυνομική ταυτότητα"); // Requirement 6
                 needsFamilyCert = true;
             }
             else {
                 serviceDescription = "Πλήρη θητεία 12 μηνών"; // Default for all other cases
+                documents.push("Δεν απαιτούνται δικαιολογητικά για πλήρη θητεία"); // Requirement 6
             }
-
             // --- Apply buyout logic if selected ---
             if (isBuyoutAttempted) {
-                // Check age for buyout eligibility
+                // Clear any documents added by standard service calculation for buyout path
+                documents = []; // Reset documents for buyout path
                 if (age < 33) {
                     serviceDescription = "Δεν έχετε δικαίωμα εξαγοράς θητείας λόγω ηλικίας (απαιτείται ηλικία 33 ετών και άνω)";
-                    documents = ["Αστυνομική ταυτότητα"];
+                    documents.push("Αστυνομική ταυτότητα"); // Only general ID if ineligible
                 } else if (isNaN(daysServed) || daysServed < 20) {
                     document.getElementById('daysServedWarning').style.display = 'block';
                     serviceDescription = "Παρακαλώ εισάγετε έγκυρο αριθμό ημερών που θα υπηρετήσετε για την εξαγορά (τουλάχιστον 20).";
-                    documents = ["Αστυνομική ταυτότητα"]; 
+                    documents.push("Αστυνομική ταυτότητα"); // Only general ID if invalid days
                 } else {
                     let totalBuyoutCost;
                     let paymentInfo;
                     const monthlyRate = 810;
-                    
-                    // Determine the base months for buyout cost calculation
+                    // Determine the base months for buyout cost calculation (based on eligibility criteria)
                     let buyoutCalculationBaseMonthsForCost;
-                    if (over35) { 
+                    if (over35) {
                         buyoutCalculationBaseMonthsForCost = 6;
-                    } else if (qualifiesAsFR) { 
+                    } else if (qualifiesAsFR) {
                         buyoutCalculationBaseMonthsForCost = 6;
-                    } else if (foreignMilitaryService) { 
+                    } else if (foreignMilitaryService) {
                         buyoutCalculationBaseMonthsForCost = 6;
-                    } else { 
-                        buyoutCalculationBaseMonthsForCost = calculatedBaseMonths;
+                    } else if (oneParentDisabled && oneParentDead) { // Requirement 5
+                        buyoutCalculationBaseMonthsForCost = 6;
+                    } else if (isMarried && spouseDisabled) { // Requirement 7
+                        buyoutCalculationBaseMonthsForCost = 6;
+                    } else if (brotherDisabled) { // Requirement 8
+                        buyoutCalculationBaseMonthsForCost = 6;
+                    } else {
+                        buyoutCalculationBaseMonthsForCost = calculatedBaseMonths; // Use previously calculated term as base
                     }
-
                     totalBuyoutCost = calculateBuyoutCost(buyoutCalculationBaseMonthsForCost, daysServed, monthlyRate);
-                    
                     // Determine payment periods based on buyout base months
                     let paymentPeriods;
                     if (buyoutCalculationBaseMonthsForCost === 12) {
                         paymentPeriods = 4;
                     } else if (buyoutCalculationBaseMonthsForCost === 6) {
                         paymentPeriods = 2;
-                    } else if (buyoutCalculationBaseMonthsForCost === 3 || buyoutCalculationBaseMonthsForCost === 9) {
+                    } else if (buyoutCalculationBaseMonthsForCost === 3 || buyoutCalculationBaseMonthsForCost === 9) { // 3 months also gets 3 periods
                         paymentPeriods = 3;
-                    } else { 
+                    } else {
                         paymentPeriods = 1; // Fallback for unexpected calculatedBaseMonths
                     }
-                    
                     const paymentAmount = Math.ceil(totalBuyoutCost / paymentPeriods);
                     serviceDescription = `Εξαγορά θητείας ${buyoutCalculationBaseMonthsForCost} μηνών. Συνολικό κόστος: ${totalBuyoutCost}€`;
                     paymentInfo = `<br>Το ποσό των ${totalBuyoutCost}€ πρέπει να καταβληθεί σε ${paymentPeriods} δόσεις των ${paymentAmount}€ η καθεμία.`;
                     serviceDescription += paymentInfo;
-
-                    documents = [
-                        "Αστυνομική ταυτότητα",
-                        "Αίτηση εξαγοράς θητείας",
+                    // Documents for buyout (Requirement 6 applies here too, if eligible for buyout)
+                    documents.push(
+                        "Αίτηση", // Requirement 6
+                        "Αστυνομική ταυτότητα", // Requirement 6
                         "Αποδεικτικό πληρωμής ηλεκτρονικού παραβόλου"
-                    ];
-                    // Re-add FR specific documents if foreignResident box was checked
-                    if (foreignResident) {
-                        documents.push(
-                            "Αίτηση στη στρατολογία για μόνιμος κάτοικας εξωτερικού",
-                            "Ειδικό πιστοποιητικό της αρμόδιας Ελληνικής Προξενικής Αρχής (ισχύει για έξι μήνες από την ημερομηνία έκδοσής του)"
-                        );
+                    );
+                    // Add specific documents for criteria that impact buyout cost/eligibility
+                    if (qualifiesAsFR) {
+                        documents.push("Ειδικό πιστοποιητικό της αρμόδιας Ελληνικής Προξενικής Αρχής (ισχύει για έξι μήνες από την ημερομηνία έκδοσής του)");
                     }
-                    // Add specific document for over35 if applicable AND buyout is chosen
-                    if (over35) {
-                        documents.push("Πιστοποιητικό Γέννησης / Ταυτότητα για επιβεβαίωση ηλικίας");
-                    }
-                    // Add specific document for foreign military service if applicable AND buyout is chosen
+                    // Requirement 1: Removed specific age verification doc for ages > 33
                     if (foreignMilitaryService) {
                         documents.push("Πιστοποιητικό κράτους που προκύπτετε ο βαθμός, η διάρκεια θητείας, η ειδικότητα, επικυρωμένο και μεταφρασμένο");
                     }
                     // If militaryParentDied and buyout, add its documents (duplicates are handled by Set later)
                     if (militaryParentDied) {
                         documents.push(
-                            "Αίτηση",
                             "Βεβαίωση αρμόδιας αρχής (Ε.Δ./Σ.Α. ή δικαστικής/αστυνομικής) για θάνατο εν ώρα υπηρεσίας ή θάνατο/τραυματισμό από τρομοκρατική ενέργεια.",
                             "Αντίγραφο πράξης απονομής σύνταξης/βοήθειας (ή Υπεύθυνη Δήλωση/αντίγραφο αίτησης αν εκκρεμεί).",
                             "Πιστοποιητικό οικογενειακής κατάστασης από το δήμο όπου το πρόσωπο είχε την οικογενειακή μερίδα."
                         );
                     }
                 }
-            } else { // If buyout is NOT selected, determine required documents based on calculated service
-                if (calculatedBaseMonths === 12) {
-                    documents = fullServiceDocuments;
-                } else if (needsFamilyCert) { // Generic family cert applies here (e.g. for children, siblings, single mother)
-                    const familyCertDoc = "Πιστοποιητικό οικογενειακής κατάστασης για στρατολογική χρήση";
-                    if (!documents.includes(familyCertDoc)) {
-                        documents.push(familyCertDoc);
-                    }
-                }
-                // Add specific document for over35 if applicable AND NOT buyout
-                if (over35) {
-                    documents.push("Πιστοποιητικό Γέννησης / Ταυτότητα για επιβεβαίωση ηλικίας");
-                }
-                // Add specific document for foreign military service if applicable AND NOT buyout
-                if (foreignMilitaryService) {
-                    documents.push("Πιστοποιητικό κράτους που προκύπτει ο βαθμός, η διάρκεια θητείας, η ειδικότητα, επικυρωμένο και μεταφρασμένο");
+            }
+            // Add general family certificate if needed (only for cases not already handled specifically by militaryParentDied)
+            if (needsFamilyCert) {
+                const familyCertDoc = "Πιστοποιητικό οικογενειακής κατάστασης για στρατολογική χρήση";
+                if (!documents.includes(familyCertDoc)) { // Prevent duplicate
+                    documents.push(familyCertDoc);
                 }
             }
-
+            // Requirement 3: Add disability document if any disability checkbox is true
+            if (oneParentDisabled || bothParentsDisabled || spouseDisabled || brotherDisabled) {
+                const disabilityDoc = "Γνωμάτευση πιστοποίηση αναπηρίας";
+                if (!documents.includes(disabilityDoc)) { // Prevent duplicate
+                    documents.push(disabilityDoc);
+                }
+            }
             // Control visibility of the familyCertInfoBox
-            // Show if any condition requiring generic family cert is met
             if (needsFamilyCert || (hasChildren && childrenCount >=3)) { // Needs family cert for 3+ children exemption
                 document.getElementById('familyCertInfoBox').style.display = 'flex';
             } else {
                 document.getElementById('familyCertInfoBox').style.display = 'none';
             }
-
             // Display results
             document.getElementById('serviceType').innerHTML = serviceDescription;
             const documentsList = document.getElementById('requiredDocuments');
             documentsList.innerHTML = '';
-            const uniqueDocuments = [...new Set(documents)]; // Use Set to avoid duplicate documents
+            const uniqueDocuments = [...new Set(documents)]; // Use Set to avoid duplicate documents while preserving insertion order
             uniqueDocuments.forEach(doc => {
                 const li = document.createElement('li');
                 li.textContent = doc;
                 documentsList.appendChild(li);
             });
-
             // Show reduced service info box if any non-full service documents are required
-            if (uniqueDocuments.length > 0 && !(uniqueDocuments.length === 1 && uniqueDocuments[0] === fullServiceDocuments[0])) {
+            if (uniqueDocuments.length > 0 && !(uniqueDocuments.length === 1 && uniqueDocuments[0] === "Δεν απαιτούνται δικαιολογητικά για πλήρη θητεία")) {
                 document.getElementById('reducedServiceInfoBox').style.display = 'flex';
             } else {
                 document.getElementById('reducedServiceInfoBox').style.display = 'none';
             }
-            
             document.getElementById('feedbackFormSection').style.display = 'block'; // Always show feedback after a calculation
             document.getElementById('result').style.display = 'block';
         }
-
         function clearForm() {
             // Reset all checkboxes
             const checkboxes = document.querySelectorAll('input[type="checkbox"]');
@@ -1068,7 +1060,7 @@
             document.getElementById('foreignResidentDetailsGroup').style.display = 'none';
             // Hide warnings and buyout details
             document.getElementById('buyoutWarning').style.display = 'none';
-            document.getElementById('over35Warning').style.display = 'none'; 
+            document.getElementById('over35Warning').style.display = 'none';
             document.getElementById('buyoutDaysServedGroup').style.display = 'none';
             document.getElementById('daysServedWarning').style.display = 'none';
             // Hide result section and specific info box
@@ -1077,7 +1069,6 @@
             document.getElementById('reducedServiceInfoBox').style.display = 'none';
             document.getElementById('feedbackFormSection').style.display = 'none';
         }
-
         // Initialize hidden groups on page load
         document.getElementById('siblingsGroup').style.display = 'none';
         document.getElementById('childrenGroup').style.display = 'none';
