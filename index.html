@@ -520,7 +520,7 @@
                         </label>
                         <label>
                             <input type="checkbox" id="oneOrBothParentsOver70">
-                            Ένας ή και οι δύο γονείς είναι άνω των 70 ετών
+                            Τουλάχιστον ένας γονέας άνω των 70 ετών
                         </label>
                         <label>
                             <input type="checkbox" id="singleMother">
@@ -528,12 +528,12 @@
                         </label>
                         <label>
                             <input type="checkbox" id="oneParentDisabled">
-                            Ένας γονέας έχει ≥67% αναπηρία
+                            Ένας γονέας με ≥67% αναπηρία
                         </label>
 
                         <label>
                             <input type="checkbox" id="bothParentsDisabled">
-                            Και οι δύο γονείς έχουν ≥67% αναπηρία
+                            Δύο γονείς με ≥67% αναπηρία
                         </label>
                         <!-- NEW SUB-OPTIONS FOR BOTH PARENTS DISABLED -->
                         <div class="sub-group" id="disabledParentsSiblingsGroup" style="display: none;">
@@ -549,8 +549,12 @@
                         <!---------------------------------------------------->
 
                         <label>
+                            <input type="checkbox" id="oneParentDead">
+                            Ένας γονέας απεβίωσε
+                        </label>
+                        <label>
                             <input type="checkbox" id="bothParentsDead">
-                            Και οι δύο γονείς έχουν πεθάνει
+                            Και οι δύο γονείς απεβίωσαν
                         </label>
                         <!-- NEW SUB-OPTIONS FOR BOTH PARENTS DEAD -->
                         <div class="sub-group" id="deadParentsSiblingsGroup" style="display: none;">
@@ -566,12 +570,8 @@
                         <!---------------------------------------------------->
                         
                         <label>
-                            <input type="checkbox" id="oneParentDead">
-                            Ένας γονέας έχει πεθάνει
-                        </label>
-                        <label>
                             <input type="checkbox" id="militaryParentDied">
-                            Γονέας ή αδελφός που πέθανε εν ώρα υπηρεσίας στις ΕΔ, ΣΑ ή τραυματίστηκε/απεβίωσε από τρομοκρατική επίθεση
+                            Γονέας ή αδελφός απεβίωσε εν ώρα υπηρεσίας στις ΕΔ, ΣΑ ή τραυματίστηκε/απεβίωσε από τρομοκρατική επίθεση
                         </label>
                     </div>
                     <!---------------------------->
@@ -667,7 +667,7 @@
         </div>
         <div class="disclaimer">
             <p><i class="fas fa-exclamation-circle"></i> Αυτό το εργαλείο παρέχεται για ενημερωτικούς σκοπούς. Για ακριβείς πληροφορίες, επικοινωνήστε με την αρμόδια στρατολογική υπηρεσία.
-            <span style="font-size: 0.8em; opacity: 0.8;">v0.9.6</span></p>
+            <span style="font-size: 0.8em; opacity: 0.8;">v0.9.6.5</span></p>
             <!-- OFFICIAL DOCUMENT INFO BOX -->
             <div id="officialDocInfoBox" class="info-box" style="display: flex;">
                 <i class="fas fa-info-circle"></i>
@@ -678,7 +678,7 @@
         </div>
     </div>
     <footer>
-        <p>© 2025 ΣΤΡ (ΠΖ) Καραθανασόπουλος Γεώργιος υπό τη καθοδήγηση του γραφείου στρατολογίας του ΚΕΠΒ-ΚΕΝ Θήβας | Αυτό το εργαλείο παρέχεται για ενημερωτικούς σκοπούς</p>
+        <p>© 2025 ΣΤΡ (ΠΖ) Καραθανασόπουλος Γεώργιος βοηθός γραφέα Στρατολογίας του ΚΕΠΒ-ΚΕΝ Θήβας | Αυτό το εργαλείο παρέχεται για ενημερωτικούς σκοπούς</p>
     </footer>
     <script>
         // Helper function to calculate buyout cost
@@ -843,12 +843,12 @@
                 (siblingsCount === 2), // 2 siblings
                 (siblingsCount >= 3), // 3+ siblings
                 singleMother,
-                oneParentDead,
-                oneParentDisabled,
-                bothParentsDead, // Both parents dead alone
-                bothParentsDisabled, // Both parents disabled alone
+                oneParentDead, // Now "Ένας γονέας απεβίωσε"
+                oneParentDisabled, // Now "Ένας γονέας με ≥67% αναπηρία"
+                bothParentsDead, // Now "Και οι δύο γονείς απεβίωσαν"
+                bothParentsDisabled, // Now "Δύο γονείς με ≥67% αναπηρία"
                 (isMarried && spouseDisabled),
-                oneOrBothParentsOver70
+                oneOrBothParentsOver70 // Now "Τουλάχιστον ένας γονέας άνω των 70 ετών"
             ];
             
             // Check if any of these conditions require a generic family cert
