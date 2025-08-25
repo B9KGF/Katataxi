@@ -469,7 +469,7 @@
                         <div id="buyoutWarning" class="error-highlight" style="margin-top: 10px; display: none; padding: 8px; border-radius: 5px;">
                             Δεν έχετε δικαίωμα εξαγοράς θητείας λόγω ηλικίας (απαιτείται ηλικία 33 ετών και άνω)
                         </div>
-                        <div id="buyoutDaysServedGroup" class="sub-group" style="display: none; margin-top: 15px;">
+                        <div class="sub-group" id="buyoutDaysServedGroup" style="display: none; margin-top: 15px;">
                             <label for="daysServed" style="display: flex; flex-direction: column; align-items: start;">
                                 <span>Πόσες ημέρες θα υπηρετήσετε;</span>
                                 <span style="font-size: 0.9em; color: #555;">Ελάχιστο: 20 ημέρες</span>
@@ -664,7 +664,7 @@
         </div>
         <div class="disclaimer">
             <p><i class="fas fa-exclamation-circle"></i> Αυτό το εργαλείο παρέχεται για ενημερωτικούς σκοπούς. Για ακριβείς πληροφορίες, επικοινωνήστε με την αρμόδια στρατολογική υπηρεσία.
-            <span style="font-size: 0.8em; opacity: 0.8;">v0.9.7</span></p>
+            <span style="font-size: 0.8em; opacity: 0.8;">v0.9.7.2</span></p>
             <!-- OFFICIAL DOCUMENT INFO BOX -->
             <div id="officialDocInfoBox" class="info-box" style="display: flex;">
                 <i class="fas fa-info-circle"></i>
@@ -1001,10 +1001,12 @@
                         documents.push("Πιστοποιητικό μόνιμου κάτοικου εξωτερικού (ΜΚΕ) από την αρμόδια προξενική αρχή (ισχύει για έξι μήνες από την ημερομηνία έκδοσής του)");
                     }
                     if (over35) {
-                        documents.push("Πιστοποιητικό Γέννησης / Ταυτότητα για επιβεβαίωση ηλικίας");
+                        // REMOVED "Πιστοποιητικό Γέννησης / Ταυτότητα για επιβεβαίωση ηλικίας"
+                        // Documents are just the base ones if no other conditions apply.
                     }
                     if (foreignMilitaryService) {
-                        documents.push("Πιστοποιητικό κράτους που προκύπτετε ο βαθμός, η διάρκεια θητείας, η ειδικότητα, επικυρωμένο και μεταφρασμένο");
+                        // UPDATED DOCUMENT TEXT HERE
+                        documents.push("Πιστοποιητικό ξένου κράτους από το οποίο προκύπτει ο βαθμός, η διάρκεια θητείας, η ειδικότητα (επικυρωμένο και μεταφρασμένο)");
                     }
                     if (militaryParentDied) {
                         documents.push("Βεβαίωση αρμόδιας αρχής (Ε.Δ./Σ.Α. ή δικαστικής/αστυνομικής) για θάνατο εν ώρα υπηρεσίας ή θάνατο/τραυματισμό από τρομοκρατική ενέργεια.", "Αντίγραφο πράξης απονομής σύνταξης/βοήθειας (ή Υπεύθυνη Δήλωση/αντίγραφο αίτησης αν εκκρεμεί).", "Πιστοποιητικό οικογενειακής κατάστασης από το δήμο όπου το πρόσωπο είχε την οικογενειακή μερίδα.");
@@ -1069,12 +1071,14 @@
             else if (over35) {
                 serviceDescription = "Θητεία 6 μηνών λόγω ηλικίας (35+).";
                 calculatedBaseMonths = 6;
-                documents = ["Αίτηση", "Αστυνομική ταυτότητα", "Πιστοποιητικό Γέννησης / Ταυτότητα για επιβεβαίωση ηλικίας"];
+                // REMOVED "Πιστοποιητικό Γέννησης / Ταυτότητα για επιβεβαίωση ηλικίας"
+                documents = ["Αίτηση", "Αστυνομική ταυτότητα"];
             } else if (foreignMilitaryService) {
                 // Modified description for point 3
                 serviceDescription = "Θητεία 6 μηνών (λόγω υπηρεσίας σε ξένο στρατό εκτός ΝΑΤΟ/ΕΕ για τουλάχιστον 6 μήνες)";
                 calculatedBaseMonths = 6;
-                documents = ["Αίτηση", "Αστυνομική ταυτότητα", "Πιστοποιητικό κράτους που προκύπτετε ο βαθμός, η διάρκεια θητείας, η ειδικότητα, επικυρωμένο και μεταφρασμένο"];
+                // UPDATED DOCUMENT TEXT HERE
+                documents = ["Αίτηση", "Αστυνομική ταυτότητα", "Πιστοποιητικό ξένου κράτους από το οποίο προκύπτει ο βαθμός, η διάρκεια θητείας, η ειδικότητα (επικυρωμένο και μεταφρασμένο)"];
             } else if (qualifiesAsFR) { // General foreign resident (after more specific bornAbroad)
                 // Modified description for point 1
                 serviceDescription = "Θητεία 6 μηνών ως Μόνιμος Κάτοικας Εξωτερικού";
