@@ -502,7 +502,7 @@
                             <!-- Sibling with disability option -->
                             <label>
                                 <input type="checkbox" id="hasSiblingDisabledGeneral">
-                                Έχω αδελφό που έχει ≥67% αναπηρία
+                                Έχω αδελφό που έχει ≥67% αναπηρία εφ’ όρου ζωής
                             </label>
                             <!------------------------------------->
                         </div>
@@ -542,7 +542,7 @@
                             </label>
                             <label>
                                 <input type="checkbox" id="hasDisabledSiblingDisabled">
-                                Έχω αδελφό με ≥67% αναπηρία
+                                Έχω αδελφό με ≥67% αναπηρία εφ' όρου ζωής
                             </label>
                         </div>
                         <!---------------------------------------------------->
@@ -562,7 +562,7 @@
                             </label>
                             <label>
                                 <input type="checkbox" id="hasDisabledSiblingDead">
-                                Έχω αδελφό με ≥67% αναπηρία
+                                Έχω αδελφό με ≥67% αναπηρία εφ' όρου ζωής
                             </label>
                         </div>
                         <!---------------------------------------------------->
@@ -600,7 +600,7 @@
                         <div class="sub-group" id="spouseGroup">
                             <label>
                                 <input type="checkbox" id="spouseDisabled">
-                                Η σύζυγός μου έχει ≥67% αναπηρία
+                                Η σύζυγός μου έχει ≥67% αναπηρία εφ’ όρου ζωής
                             </label>
                         </div>
                     </div>
@@ -616,7 +616,7 @@
                     <div class="form-group">
                         <label>
                             <input type="checkbox" id="foreignMilitaryService">
-                            Έχω υπηρετήσει σε κράτος που δεν ανήκει στο συμμαχικό στρατό (NATO) ή στην Ευρωπαϊκή Ένωση (ΕΕ)
+                            Έχω υπηρετήσει σε κράτος που δεν ανήκει στο συμμαχικό στρατό (NATO) ή στην Ευρωπαϊκή Ένωση (ΕΕ) για τουλάχιστον 6 μήνες
                         </label>
                     </div>
                 </div>
@@ -664,7 +664,7 @@
         </div>
         <div class="disclaimer">
             <p><i class="fas fa-exclamation-circle"></i> Αυτό το εργαλείο παρέχεται για ενημερωτικούς σκοπούς. Για ακριβείς πληροφορίες, επικοινωνήστε με την αρμόδια στρατολογική υπηρεσία.
-            <span style="font-size: 0.8em; opacity: 0.8;">v0.9.6.5</span></p>
+            <span style="font-size: 0.8em; opacity: 0.8;">v0.9.7</span></p>
             <!-- OFFICIAL DOCUMENT INFO BOX -->
             <div id="officialDocInfoBox" class="info-box" style="display: flex;">
                 <i class="fas fa-info-circle"></i>
@@ -910,7 +910,7 @@
                 displayResult(`<span class="error-highlight">Παρακαλώ εισάγετε έγκυρη ηλικία (τουλάχιστον 18 ετών).</span>`, [], buyout);
                 return;
             } else if (age >= 45) {
-                displayResult(`Απαλλαγή από στρατιωτική θητεία (λόγου ηλικίας 45+).<br><span style="font-size: 0.9em; color: #555;">Να καλέσει τη στρατολογική υπηρεσία στην οποία ανήκει για να το διευθετήσει.</span>`, ["Αστυνομική ταυτότητα"], buyout);
+                displayResult(`Απαλλαγή από στρατιωτική θητεία (λόγω ηλικίας 45+).<br><span style="font-size: 0.9em; color: #555;">Να καλέσει τη στρατολογική υπηρεσία στην οποία ανήκει για να το διευθετήσει.</span>`, ["Αστυνομική ταυτότητα"], buyout);
                 return;
             }
 
@@ -926,7 +926,8 @@
             }
             if ((bothParentsDisabled && (hasMinorSiblingDisabled || hasDisabledSiblingDisabled)) ||
                 (bothParentsDead && (hasMinorSiblingDead || hasDisabledSiblingDead))) {
-                serviceDescription = "Απαλλαγή από στρατιωτική θητεία (λόγου θανάτου/αναπηρίας και των δύο γονέων με ανήλικο/ανάπηρο αδελφό).";
+                // Corrected "λόγου" to "λόγω"
+                serviceDescription = "Απαλλαγή από στρατιωτική θητεία (λόγω θανάτου/αναπηρίας και των δύο γονέων με ανήλικο/ανάπηρο αδελφό).";
                 documents = ["Αίτηση", "Αστυνομική ταυτότητα", "Πιστοποιητικό οικογενειακής κατάστασης για στρατολογική χρήση"];
                 if (hasDisabledSiblingDisabled || hasDisabledSiblingDead) {
                     documents.push("Γνωμάτευση πιστοποίησης αναπηρίας");
@@ -962,10 +963,11 @@
                     // Prioritize shortest terms for buyout base
                     if (militaryParentDied || (qualifiesAsFR && bornAbroad)) { // 3 months
                         buyoutCalculationBaseMonthsForCost = 3;
-                    } else if (oneParentDead && oneParentDisabled) { // NEW PRIORITY FOR BUYOUT BASE
+                    } else if (oneParentDead && oneParentDisabled) { // NEW PRIORITY FOR BUYOUT BASE (6 months)
                         buyoutCalculationBaseMonthsForCost = 6;
                     } else if (hasSiblingDisabledGeneral || over35 || foreignMilitaryService || qualifiesAsFR ||
-                               (hasChildren && childrenCount == 2) || siblingsCount >= 3 || bothParentsDead || bothParentsDisabled) {
+                               (hasChildren && childrenCount == 2) || siblingsCount >= 3 || bothParentsDead || bothParentsDisabled ||
+                               (isMarried && spouseDisabled)) { // isMarried && spouseDisabled moved to 6 months
                         buyoutCalculationBaseMonthsForCost = 6;
                     } else {
                         // Determine base service to calculate buyout from for 9 or 12 months
@@ -975,7 +977,7 @@
                         if (singleMother) baseForReduction = Math.min(baseForReduction, 9);
                         if (oneParentDead) baseForReduction = Math.min(baseForReduction, 9);
                         if (oneParentDisabled) baseForReduction = Math.min(baseForReduction, 9);
-                        if (isMarried && spouseDisabled) baseForReduction = Math.min(baseForReduction, 9);
+                        // isMarried && spouseDisabled is now handled above for 6 months
                         if (oneOrBothParentsOver70) baseForReduction = Math.min(baseForReduction, 9);
                         buyoutCalculationBaseMonthsForCost = baseForReduction;
                     }
@@ -995,7 +997,8 @@
                     documents = ["Αίτηση εξαγοράς θητείας", "Αστυνομική ταυτότητα", "Αποδεικτικό πληρωμής ηλεκτρονικού παραβόλου"];
                     // Add other specific documents based on selected options that affect buyout
                     if (qualifiesAsFR) {
-                        documents.push("Αίτηση στη στρατολογία για μόνιμος κάτοικας εξωτερικού", "Πιστοποιητικό μόνιμου κάτοικου εξωτερικού (ΜΚΕ) από την αρμόδια προξενική αρχή (ισχύει για έξι μήνες από την ημερομηνία έκδοσής του)");
+                        // Removed "Αίτηση στη στρατολογία για μόνιμος κάτοικας εξωτερικού"
+                        documents.push("Πιστοποιητικό μόνιμου κάτοικου εξωτερικού (ΜΚΕ) από την αρμόδια προξενική αρχή (ισχύει για έξι μήνες από την ημερομηνία έκδοσής του)");
                     }
                     if (over35) {
                         documents.push("Πιστοποιητικό Γέννησης / Ταυτότητα για επιβεβαίωση ηλικίας");
@@ -1004,8 +1007,6 @@
                         documents.push("Πιστοποιητικό κράτους που προκύπτετε ο βαθμός, η διάρκεια θητείας, η ειδικότητα, επικυρωμένο και μεταφρασμένο");
                     }
                     if (militaryParentDied) {
-                        // Note: "Αίτηση" is handled by "Αίτηση εξαγοράς θητείας" here,
-                        // so we only push the remaining specific docs for militaryParentDied
                         documents.push("Βεβαίωση αρμόδιας αρχής (Ε.Δ./Σ.Α. ή δικαστικής/αστυνομικής) για θάνατο εν ώρα υπηρεσίας ή θάνατο/τραυματισμό από τρομοκρατική ενέργεια.", "Αντίγραφο πράξης απονομής σύνταξης/βοήθειας (ή Υπεύθυνη Δήλωση/αντίγραφο αίτησης αν εκκρεμεί).", "Πιστοποιητικό οικογενειακής κατάστασης από το δήμο όπου το πρόσωπο είχε την οικογενειακή μερίδα.");
                     }
                     // Add conditional documents for other reductions (Family Status, Disability, etc.)
@@ -1043,12 +1044,14 @@
                     "Πιστοποιητικό οικογενειακής κατάστασης από το δήμο όπου το πρόσωπο είχε την οικογενειακή μερίδα."
                 ];
             } else if (qualifiesAsFR && bornAbroad) {
-                serviceDescription = "Θητεία 3 μηνών ως Μόνιμος Κάτοικας Εξωτερικού (γεννηθείς εξωτερικού, με πλήρωση κριτηρίων).<br><em><small>(Δυνατότητα τμηματικής θητείας σε μηνιαίες δόσεις)</small></em>";
+                // Modified description for point 5
+                serviceDescription = "Θητεία 3 μηνών ως Μόνιμος Κάτοικας Εξωτερικού (γεννηθείς στο εξωτερικό)";
                 calculatedBaseMonths = 3;
-                documents = ["Αίτηση", "Αστυνομική ταυτότητα", "Αίτηση στη στρατολογία για μόνιμος κάτοικας εξωτερικού", "Πιστοποιητικό μόνιμου κάτοικου εξωτερικού (ΜΚΕ) από την αρμόδια προξενική αρχή (ισχύει για έξι μήμηνες από την ημερομηνία έκδοσής του)"];
+                // Removed "Αίτηση στη στρατολογία για μόνιμος κάτοικας εξωτερικού" for point 6
+                documents = ["Αίτηση", "Αστυνομική ταυτότητα", "Πιστοποιητικό μόνιμου κάτοικου εξωτερικού (ΜΚΕ) από την αρμόδια προξενική αρχή (ισχύει για έξι μήμηνες από την ημερομηνία έκδοσής του)"];
             }
             // 6-month cases (ordered from most specific, or new cases first)
-            else if (oneParentDead && oneParentDisabled) { // THIS IS THE NEW CONDITION, PRIORITIZED HERE
+            else if (oneParentDead && oneParentDisabled) {
                 serviceDescription = "Θητεία 6 μηνών (λόγω θανάτου ενός γονέα και αναπηρίας του άλλου γονέα)";
                 calculatedBaseMonths = 6;
                 documents = ["Αίτηση", "Αστυνομική ταυτότητα", "Πιστοποιητικό οικογενειακής κατάστασης για στρατολογική χρήση", "Γνωμάτευση πιστοποίησης αναπηρίας"];
@@ -1058,18 +1061,26 @@
                 calculatedBaseMonths = 6;
                 documents = ["Αίτηση", "Αστυνομική ταυτότητα", "Πιστοποιητικό οικογενειακής κατάστασης για στρατολογική χρήση", "Γνωμάτευση πιστοποίησης αναπηρίας"];
             }
+            else if (isMarried && spouseDisabled) { // MOVED TO 6-MONTH CATEGORY (Point 4)
+                serviceDescription = "Θητεία 6 μηνών (λόγω συζύγου με αναπηρία)";
+                calculatedBaseMonths = 6;
+                documents = ["Αίτηση", "Αστυνομική ταυτότητα", "Πιστοποιητικό οικογενειακής κατάστασης για στρατολογική χρήση", "Γνωμάτευση πιστοποίησης αναπηρίας"];
+            }
             else if (over35) {
                 serviceDescription = "Θητεία 6 μηνών λόγω ηλικίας (35+).";
                 calculatedBaseMonths = 6;
                 documents = ["Αίτηση", "Αστυνομική ταυτότητα", "Πιστοποιητικό Γέννησης / Ταυτότητα για επιβεβαίωση ηλικίας"];
             } else if (foreignMilitaryService) {
-                serviceDescription = "Θητεία 6 μηνών (λόγω υπηρεσίας σε ξένο στρατό εκτός ΝΑΤΟ/ΕΕ).";
+                // Modified description for point 3
+                serviceDescription = "Θητεία 6 μηνών (λόγω υπηρεσίας σε ξένο στρατό εκτός ΝΑΤΟ/ΕΕ για τουλάχιστον 6 μήνες)";
                 calculatedBaseMonths = 6;
                 documents = ["Αίτηση", "Αστυνομική ταυτότητα", "Πιστοποιητικό κράτους που προκύπτετε ο βαθμός, η διάρκεια θητείας, η ειδικότητα, επικυρωμένο και μεταφρασμένο"];
             } else if (qualifiesAsFR) { // General foreign resident (after more specific bornAbroad)
-                serviceDescription = "Θητεία 6 μηνών ως Μόνιμος Κάτοικας Εξωτερικού (με πλήρωση κριτηρίων).<br><em><small>(Δυνατότητα τμηματικής θητείας σε μηνιαίες δόσεις)</small></em>";
+                // Modified description for point 1
+                serviceDescription = "Θητεία 6 μηνών ως Μόνιμος Κάτοικας Εξωτερικού";
                 calculatedBaseMonths = 6;
-                documents = ["Αίτηση", "Αστυνομική ταυτότητα", "Αίτηση στη στρατολογία για μόνιμος κάτοικας εξωτερικού", "Πιστοποιητικό μόνιμου κάτοικου εξωτερικού (ΜΚΕ) από την αρμόδια προξενική αρχή (ισχύει για έξι μήμηνες από την ημερομηνία έκδοσής του)"];
+                // Removed "Αίτηση στη στρατολογία για μόνιμος κάτοικας εξωτερικού" for point 6
+                documents = ["Αίτηση", "Αστυνομική ταυτότητα", "Πιστοποιητικό μόνιμου κάτοικου εξωτερικού (ΜΚΕ) από την αρμόδια προξενική αρχή (ισχύει για έξι μήμηνες από την ημερομηνία έκδοσής του)"];
             } else if (hasChildren && childrenCount == 2) {
                 serviceDescription = "Θητεία 6 μηνών (λόγω 2 ζώντων τέκνων)";
                 calculatedBaseMonths = 6;
@@ -1106,21 +1117,17 @@
                 calculatedBaseMonths = 9;
                 documents = ["Αίτηση", "Αστυνομική ταυτότητα", "Πιστοποιητικό οικογενειακής κατάστασης για στρατολογική χρήση"];
             }
-            else if (oneParentDead) { // Now correctly handled *after* the combined parent condition
+            else if (oneParentDead) {
                 serviceDescription = "Θητεία 9 μηνών (λόγω θανάτου ενός γονέα)";
                 calculatedBaseMonths = 9;
                 documents = ["Αίτηση", "Αστυνομική ταυτότητα", "Πιστοποιητικό οικογενειακής κατάστασης για στρατολογική χρήση"];
             }
-            else if (oneParentDisabled) { // Now correctly handled *after* the combined parent condition
+            else if (oneParentDisabled) {
                 serviceDescription = "Θητεία 9 μηνών (λόγω αναπηρίας ενός γονέα)";
                 calculatedBaseMonths = 9;
                 documents = ["Αίτηση", "Αστυνομική ταυτότητα", "Πιστοποιητικό οικογενειακής κατάστασης για στρατολογική χρήση", "Γνωμάτευση πιστοποίησης αναπηρίας"];
             }
-            else if (isMarried && spouseDisabled) {
-                serviceDescription = "Θητεία 9 μηνών (λόγω συζύγου με αναπηρία)";
-                calculatedBaseMonths = 9;
-                documents = ["Αίτηση", "Αστυνομική ταυτότητα", "Πιστοποιητικό οικογενειακής κατάστασης για στρατολογική χρήση", "Γνωμάτευση πιστοποίησης αναπηρίας"];
-            }
+            // isMarried && spouseDisabled is now handled in 6-month section
             else if (oneOrBothParentsOver70) {
                 serviceDescription = "Θητεία 9 μηνών (λόγω ενός ή και των δύο γονέων άνω των 70 ετών)";
                 calculatedBaseMonths = 9;
