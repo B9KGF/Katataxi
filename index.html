@@ -534,17 +534,7 @@
                             <input type="checkbox" id="bothParentsDisabled">
                             Είμαι μόνος ή μεγαλύτερος γιος δύο γονέων με ≥67% αναπηρία
                         </label>
-                        <!-- NEW SUB-OPTIONS FOR BOTH PARENTS DISABLED -->
-                        <div class="sub-group" id="disabledParentsSiblingsGroup" style="display: none;">
-                            <label>
-                                <input type="checkbox" id="hasMinorSiblingDisabled">
-                                Έχω ανήλικο αδελφό
-                            </label>
-                            <label>
-                                <input type="checkbox" id="hasDisabledSiblingDisabled">
-                                Έχω αδελφό με ≥67% αναπηρία εφ' όρου ζωής
-                            </label>
-                        </div>
+                        <!-- ORIGINAL: NEW SUB-OPTIONS FOR BOTH PARENTS DISABLED - REMOVED PER INSTRUCTIONS -->
                         <!---------------------------------------------------->
                         <label>
                             <input type="checkbox" id="oneParentDead">
@@ -723,24 +713,15 @@
                 document.getElementById('bornAbroad').checked = false;
             }
         });
-        // Logic for showing sibling sub-groups based on parent status
-        const bothParentsDisabledCheckbox = document.getElementById('bothParentsDisabled');
-        const disabledParentsSiblingsGroup = document.getElementById('disabledParentsSiblingsGroup');
-        const hasMinorSiblingDisabledCheckbox = document.getElementById('hasMinorSiblingDisabled');
-        const hasDisabledSiblingDisabledCheckbox = document.getElementById('hasDisabledSiblingDisabled');
+
+        // Logic for showing sibling sub-groups based on parent status (only for dead parents now)
         const bothParentsDeadCheckbox = document.getElementById('bothParentsDead');
         const deadParentsSiblingsGroup = document.getElementById('deadParentsSiblingsGroup');
         const hasMinorSiblingDeadCheckbox = document.getElementById('hasMinorSiblingDead');
         const hasDisabledSiblingDeadCheckbox = document.getElementById('hasDisabledSiblingDead');
-        bothParentsDisabledCheckbox.addEventListener('change', function() {
-            if (this.checked) {
-                disabledParentsSiblingsGroup.style.display = 'block';
-            } else {
-                disabledParentsSiblingsGroup.style.display = 'none';
-                hasMinorSiblingDisabledCheckbox.checked = false;
-                hasDisabledSiblingDisabledCheckbox.checked = false;
-            }
-        });
+        
+        // Removed event listener for bothParentsDisabledCheckbox as its sub-group is removed.
+
         bothParentsDeadCheckbox.addEventListener('change', function() {
             if (this.checked) {
                 deadParentsSiblingsGroup.style.display = 'block';
@@ -810,7 +791,7 @@
             // Determine if familyCertInfoBox is needed (now more explicit to avoid general needsFamilyCert)
             const hasChildren = document.getElementById('hasChildren').checked;
             const childrenCount = hasChildren ? parseInt(document.getElementById('childrenCount').value) : 0;
-            const hasMinorSiblingDisabled = bothParentsDisabledCheckbox.checked ? hasMinorSiblingDisabledCheckbox.checked : false;
+            // Removed hasMinorSiblingDisabled as it's no longer a sub-option for disabled parents.
             const hasMinorSiblingDead = bothParentsDeadCheckbox.checked ? hasMinorSiblingDeadCheckbox.checked : false;
             const hasSiblingDisabledGeneral = document.getElementById('hasSiblingDisabledGeneral').checked;
             const siblingsCount = document.getElementById('hasSiblings').checked ? parseInt(document.getElementById('siblingsCount').value) : 0;
@@ -824,7 +805,7 @@
             const oneOrBothParentsOver70 = document.getElementById('oneOrBothParentsOver70').checked;
             const familyCertNeededConditions = [
                 (hasChildren && childrenCount >= 3), // 3+ children exemption
-                (bothParentsDisabled && hasMinorSiblingDisabled), // Both disabled parents + minor sibling exemption
+                // Removed (bothParentsDisabled && hasMinorSiblingDisabled), // Both disabled parents + minor sibling exemption - No longer applies due to sub-criteria removal
                 (bothParentsDead && hasMinorSiblingDead),     // Both dead parents + minor sibling exemption
                 hasSiblingDisabledGeneral, // General disabled sibling
                 (hasChildren && childrenCount === 1), // 1 child
@@ -849,7 +830,7 @@
             // Show reduced service info box if any non-full service documents are required
             // And if it's not a full exemption (where the message is already handled in serviceDescription)
             const isExempt = serviceDescription.includes("Απαλλαγή από στρατιωτική θητεία") && !isBuyoutOptionSelected; // Use parameter here
-            const isFullService = documentsArray.length === 1 && documentsArray[0] === "Δεν απαιτούνται δικαιολογητικά για πλήρη θητεία"; // Direct string comparison
+            const isFullService = documentsArray.length === 1 && documentsArray[0] === "Δεν απαιτούνται δικαιολογητικά για πλήση θητεία"; // Direct string comparison
             if (!isExempt && !isFullService) {
                 document.getElementById('reducedServiceInfoBox').style.display = 'flex';
             } else {
@@ -886,8 +867,8 @@
             const foreignMilitaryService = document.getElementById('foreignMilitaryService').checked;
             const daysServed = parseInt(document.getElementById('daysServed').value);
             // Get values for new sibling conditions (using unique IDs)
-            const hasMinorSiblingDisabled = bothParentsDisabled ? hasMinorSiblingDisabledCheckbox.checked : false;
-            const hasDisabledSiblingDisabled = bothParentsDisabled ? hasDisabledSiblingDisabledCheckbox.checked : false;
+            // Removed: const hasMinorSiblingDisabled = bothParentsDisabled ? hasMinorSiblingDisabledCheckbox.checked : false;
+            // Removed: const hasDisabledSiblingDisabled = bothParentsDisabled ? hasDisabledSiblingDisabledCheckbox.checked : false;
             const hasMinorSiblingDead = bothParentsDead ? hasMinorSiblingDeadCheckbox.checked : false;
             const hasDisabledSiblingDead = bothParentsDead ? hasDisabledSiblingDeadCheckbox.checked : false;
             const hasSiblingDisabledGeneral = document.getElementById('hasSiblingDisabledGeneral').checked;
@@ -898,13 +879,11 @@
             document.getElementById('familyCertInfoBox').style.display = 'none';
             document.getElementById('reducedServiceInfoBox').style.display = 'none';
             document.getElementById('feedbackFormSection').style.display = 'none';
-
             let documents = []; // Start empty, will be populated based on conditions
             let serviceDescription = "";
             let calculatedBaseMonths = 12; // Default for full service
             let isBuyoutAttempted = buyout;
             let fullServiceDocuments = ['Δεν απαιτούνται δικαιολογητικά για πλήρη θητεία'];
-            
             // --- Age Validation & Exemption for 45+ (Highest Priority) ---
             if (isNaN(age) || age < 18) {
                 displayResult(`<span class="error-highlight">Παρακαλώ εισάγετε έγκυρη ηλικία (τουλάχιστον 18 ετών).</span>`, [], buyout);
@@ -913,7 +892,6 @@
                 displayResult(`Απαλλαγή από στρατιωτική θητεία (λόγω ηλικίας 45+).<br><span style="font-size: 0.9em; color: #555;">Να καλέσει τη στρατολογική υπηρεσία στην οποία ανήκει για να το διευθετήσει.</span>`, ["Αστυνομική ταυτότητα"], buyout);
                 return;
             }
-
             // --- Other Exemption Cases (High Priority) ---
             if (hasChildren && childrenCount >= 3) {
                 serviceDescription = "Απαλλαγή από στρατιωτική θητεία (λόγω 3+ ζώντων τέκνων)";
@@ -924,12 +902,11 @@
                 displayResult(serviceDescription, documents, isBuyoutAttempted);
                 return;
             }
-            if ((bothParentsDisabled && (hasMinorSiblingDisabled || hasDisabledSiblingDisabled)) ||
-                (bothParentsDead && (hasMinorSiblingDead || hasDisabledSiblingDead))) {
-                // Corrected "λόγου" to "λόγω"
-                serviceDescription = "Απαλλαγή από στρατιωτική θητεία (λόγω θανάτου/αναπηρίας και των δύο γονέων με ανήλικο/ανάπηρο αδελφό).";
+            // MODIFIED: Exemption now only for bothParentsDead with siblings, as per requirements (removed bothParentsDisabled sub-criteria)
+            else if (bothParentsDead && (hasMinorSiblingDead || hasDisabledSiblingDead)) {
+                serviceDescription = "Απαλλαγή από στρατιωτική θητεία (λόγω θανάτου και των δύο γονέων με ανήλικο/ανάπηρο αδελφό)"; // NEW TEXT
                 documents = ["Αίτηση", "Αστυνομική ταυτότητα", "Πιστοποιητικό οικογενειακής κατάστασης για στρατολογική χρήση"];
-                if (hasDisabledSiblingDisabled || hasDisabledSiblingDead) {
+                if (hasDisabledSiblingDead) {
                     documents.push("Γνωμάτευση πιστοποίησης αναπηρίας");
                 }
                 if (isBuyoutAttempted) {
@@ -944,7 +921,6 @@
             if (foreignResident && (yearsFinancial >= 7 || yearsResidence >= 11)) {
                 qualifiesAsFR = true;
             }
-
             // --- Handle Buyout First if it's NOT an exemption case ---
             if (isBuyoutAttempted) {
                 if (age < 33) {
@@ -981,28 +957,25 @@
                         if (oneOrBothParentsOver70) baseForReduction = Math.min(baseForReduction, 9);
                         buyoutCalculationBaseMonthsForCost = baseForReduction;
                     }
-
                     totalBuyoutCost = calculateBuyoutCost(buyoutCalculationBaseMonthsForCost, daysServed, monthlyRate);
                     let paymentPeriods;
                     if (buyoutCalculationBaseMonthsForCost === 12) paymentPeriods = 4;
                     else if (buyoutCalculationBaseMonthsForCost === 6) paymentPeriods = 2;
                     else if (buyoutCalculationBaseMonthsForCost === 3 || buyoutCalculationBaseMonthsForCost === 9) paymentPeriods = 3;
                     else paymentPeriods = 1; // Fallback, though 9 months is already covered for 3 payments
-                    
                     const paymentAmount = Math.ceil(totalBuyoutCost / paymentPeriods);
                     serviceDescription = `Εξαγορά θητείας ${buyoutCalculationBaseMonthsForCost} μηνών. Συνολικό κόστος: ${totalBuyoutCost}€`;
                     paymentInfo = `<br>Το ποσό των ${totalBuyoutCost}€ πρέπει να καταβληθεί σε ${paymentPeriods} δόσεις των ${paymentAmount}€ η καθεμία.`;
                     serviceDescription += paymentInfo;
                     // Set base documents for buyout scenario with correct order
-                    documents = ["Αίτηση εξαγοράς θητείας", "Αστυνομική ταυτότητα", "Αποδεικτικό πληρωμής ηλεκτρονικού παραβόλου"];
+                    documents = ["Αίτηση εξαγοράς θητείας", "Αστυνομική ταυτότητα", "Αποδεικτικό πληρωμής ηλεκτρονικού παραβό"];
                     // Add other specific documents based on selected options that affect buyout
                     if (qualifiesAsFR) {
                         // Removed "Αίτηση στη στρατολογία για μόνιμος κάτοικας εξωτερικού"
                         documents.push("Πιστοποιητικό μόνιμου κάτοικου εξωτερικού (ΜΚΕ) από την αρμόδια προξενική αρχή (ισχύει για έξι μήνες από την ημερομηνία έκδοσής του)");
                     }
-                    if (over35) {
-                        // REMOVED "Πιστοποιητικό Γέννησης / Ταυτότητα για επιβεβαίωση ηλικίας"
-                        // Documents are just the base ones if no other conditions apply.
+                    if (over35) { // ADDED DOCUMENT FOR OVER35
+                        documents.push("Απόφαση εγγραφής στα Μητρώα Αρρένων");
                     }
                     if (foreignMilitaryService) {
                         // UPDATED DOCUMENT TEXT HERE
@@ -1018,7 +991,7 @@
                             documents.push("Πιστοποιητικό οικογενειακής κατάστασης για στρατολογική χρήση");
                         }
                     }
-                    if (hasSiblingDisabledGeneral || oneParentDisabled || bothParentsDisabled || (isMarried && spouseDisabled)) {
+                    if (hasSiblingDisabledGeneral || oneParentDisabled || bothParentsDisabled || (isMarried && spouseDisabled) || (bothParentsDead && hasDisabledSiblingDead)) { // Added hasDisabledSiblingDead for dead parents case
                          if (!documents.includes("Γνωμάτευση πιστοποίησης αναπηρίας")) {
                             documents.push("Γνωμάτευση πιστοποίησης αναπηρίας");
                         }
@@ -1027,13 +1000,11 @@
                 displayResult(serviceDescription, documents, isBuyoutAttempted);
                 return; // Exit here if buyout was chosen and handled
             }
-
             // --- Non-Buyout Service Term Calculation (Main Logic - Prioritized) ---
             // Default to full service, then apply reductions if conditions are met.
             serviceDescription = "Πλήρη θητεία 12 μηνών";
             documents = fullServiceDocuments;
             calculatedBaseMonths = 12;
-
             // 3-month cases (most reduced)
             if (militaryParentDied) {
                 serviceDescription = "Θητεία 3 μηνών (λόγω θανάτου/τραυματισμού γονέα ή αδελφού σε υπηρεσία/τρομοκρατική επίθεση)";
@@ -1068,11 +1039,10 @@
                 calculatedBaseMonths = 6;
                 documents = ["Αίτηση", "Αστυνομική ταυτότητα", "Πιστοποιητικό οικογενειακής κατάστασης για στρατολογική χρήση", "Γνωμάτευση πιστοποίησης αναπηρίας"];
             }
-            else if (over35) {
+            else if (over35) { // UPDATED DOCUMENTS FOR OVER35
                 serviceDescription = "Θητεία 6 μηνών λόγω ηλικίας (35+).";
                 calculatedBaseMonths = 6;
-                // REMOVED "Πιστοποιητικό Γέννησης / Ταυτότητα για επιβεβαίωση ηλικίας"
-                documents = ["Αίτηση", "Αστυνομική ταυτότητα"];
+                documents = ["Αίτηση", "Αστυνομική ταυτότητα", "Απόφαση εγγραφής στα Μητρώα Αρρένων"];
             } else if (foreignMilitaryService) {
                 // Modified description for point 3
                 serviceDescription = "Θητεία 6 μηνών (λόγω υπηρεσίας σε ξένο στρατό εκτός ΝΑΤΟ/ΕΕ για τουλάχιστον 6 μήνες)";
@@ -1100,7 +1070,7 @@
                 calculatedBaseMonths = 6;
                 documents = ["Αίτηση", "Αστυνομική ταυτότητα", "Πιστοποιητικό οικογενειακής κατάστασης για στρατολογική χρήση"];
             }
-            else if (bothParentsDisabled) {
+            else if (bothParentsDisabled) { // Still a 6-month case, as sub-criteria for exemption were removed.
                 serviceDescription = "Θητεία 6 μηνών (λόγω αναπηρίας και των δύο γονέων)";
                 calculatedBaseMonths = 6;
                 documents = ["Αίτηση", "Αστυνομική ταυτότητα", "Πιστοποιητικό οικογενειακής κατάστασης για στρατολογική χρήση", "Γνωμάτευση πιστοποίησης αναπηρίας"];
@@ -1138,7 +1108,6 @@
                 documents = ["Αίτηση", "Αστυνομική ταυτότητα", "Πιστοποιητικό οικογενειακής κατάστασης για στρατολογική χρήση"];
             }
             // No 'else' needed here, as default values are set at the top of this block.
-
             displayResult(serviceDescription, documents, isBuyoutAttempted);
         }
         function clearForm() {
@@ -1160,9 +1129,9 @@
             document.getElementById('spouseGroup').style.display = 'none';
             document.getElementById('foreignResidentDetailsGroup').style.display = 'none';
             // Hide parent obligation siblings groups and reset their checkboxes
-            disabledParentsSiblingsGroup.style.display = 'none';
-            hasMinorSiblingDisabledCheckbox.checked = false;
-            hasDisabledSiblingDisabledCheckbox.checked = false;
+            // Removed: disabledParentsSiblingsGroup.style.display = 'none';
+            // Removed: hasMinorSiblingDisabledCheckbox.checked = false;
+            // Removed: hasDisabledSiblingDisabledCheckbox.checked = false;
             deadParentsSiblingsGroup.style.display = 'none';
             hasMinorSiblingDeadCheckbox.checked = false;
             hasDisabledSiblingDeadCheckbox.checked = false;
@@ -1186,7 +1155,7 @@
         document.getElementById('buyoutDaysServedGroup').style.display = 'none';
         document.getElementById('daysServedWarning').style.display = 'none';
         // Initialize new parent obligation siblings groups as hidden
-        document.getElementById('disabledParentsSiblingsGroup').style.display = 'none';
+        // Removed: document.getElementById('disabledParentsSiblingsGroup').style.display = 'none';
         document.getElementById('deadParentsSiblingsGroup').style.display = 'none';
     </script>
 </body>
