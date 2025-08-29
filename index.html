@@ -713,15 +713,12 @@
                 document.getElementById('bornAbroad').checked = false;
             }
         });
-
         // Logic for showing sibling sub-groups based on parent status (only for dead parents now)
         const bothParentsDeadCheckbox = document.getElementById('bothParentsDead');
         const deadParentsSiblingsGroup = document.getElementById('deadParentsSiblingsGroup');
         const hasMinorSiblingDeadCheckbox = document.getElementById('hasMinorSiblingDead');
         const hasDisabledSiblingDeadCheckbox = document.getElementById('hasDisabledSiblingDead');
-        
         // Removed event listener for bothParentsDisabledCheckbox as its sub-group is removed.
-
         bothParentsDeadCheckbox.addEventListener('change', function() {
             if (this.checked) {
                 deadParentsSiblingsGroup.style.display = 'block';
@@ -813,12 +810,12 @@
                 (siblingsCount === 2), // 2 siblings
                 (siblingsCount >= 3), // 3+ siblings
                 singleMother,
-                oneParentDead, // Now "Ένας γονέας απεβίωσε"
-                oneParentDisabled, // Now "Ένας γονέας με ≥67% αναπηρία"
-                bothParentsDead, // Now "Και οι δύο γονείς απεβίωσαν"
-                bothParentsDisabled, // Now "Δύο γονείς με ≥67% αναπηρία"
+                oneParentDead,
+                oneParentDisabled,
+                bothParentsDead,
+                bothParentsDisabled,
                 (isMarried && spouseDisabled),
-                oneOrBothParentsOver70 // Now "Τουλάχιστον ένας γονέας άνω των 70 ετών"
+                oneOrBothParentsOver70
             ];
             // Check if any of these conditions require a generic family cert
             const genericFamilyCertRequired = familyCertNeededConditions.some(condition => uniqueDocuments.includes("Πιστοποιητικό οικογενειακής κατάστασης για στρατολογική χρήση") || uniqueDocuments.some(doc => doc.includes("οικογενειακής κατάστασης από το δήμο"))); // Check if family cert is actually in the list
@@ -883,7 +880,7 @@
             let serviceDescription = "";
             let calculatedBaseMonths = 12; // Default for full service
             let isBuyoutAttempted = buyout;
-            let fullServiceDocuments = ['Δεν απαιτούνται δικαιολογητικά για πλήρη θητεία'];
+            let fullServiceDocuments = ['Δεν απαιτούνται δικαιολογητικά για πλήση θητεία'];
             // --- Age Validation & Exemption for 45+ (Highest Priority) ---
             if (isNaN(age) || age < 18) {
                 displayResult(`<span class="error-highlight">Παρακαλώ εισάγετε έγκυρη ηλικία (τουλάχιστον 18 ετών).</span>`, [], buyout);
@@ -915,7 +912,6 @@
                 displayResult(serviceDescription, documents, isBuyoutAttempted);
                 return;
             }
-
             // Determine if user can be considered a Foreign Resident for service reduction purposes
             let qualifiesAsFR = false;
             if (foreignResident && (yearsFinancial >= 7 || yearsResidence >= 11)) {
@@ -936,10 +932,14 @@
                     const monthlyRate = 810;
                     // Determine base months for buyout cost calculation based on applicable reductions
                     let buyoutCalculationBaseMonthsForCost;
-                    // Prioritize shortest terms for buyout base
-                    if (militaryParentDied || (qualifiesAsFR && bornAbroad)) { // 3 months
+
+                    // PRIORITIZED FIX: Separate (qualifiesAsFR && bornAbroad) for buyout calculation
+                    if (militaryParentDied) {
                         buyoutCalculationBaseMonthsForCost = 3;
-                    } else if (oneParentDead && oneParentDisabled) { // NEW PRIORITY FOR BUYOUT BASE (6 months)
+                    } else if (qualifiesAsFR && bornAbroad) { // FIX: This condition now correctly sets 6 months for buyout base
+                        buyoutCalculationBaseMonthsForCost = 6;
+                    }
+                    else if (oneParentDead && oneParentDisabled) { // NEW PRIORITY FOR BUYOUT BASE (6 months)
                         buyoutCalculationBaseMonthsForCost = 6;
                     } else if (hasSiblingDisabledGeneral || over35 || foreignMilitaryService || qualifiesAsFR ||
                                (hasChildren && childrenCount == 2) || siblingsCount >= 3 || bothParentsDead || bothParentsDisabled ||
