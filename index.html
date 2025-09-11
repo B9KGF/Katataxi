@@ -827,7 +827,7 @@
             // Show reduced service info box if any non-full service documents are required
             // And if it's not a full exemption (where the message is already handled in serviceDescription)
             const isExempt = serviceDescription.includes("Απαλλαγή από στρατιωτική θητεία") && !isBuyoutOptionSelected; // Use parameter here
-            const isFullService = documentsArray.length === 1 && documentsArray[0] === "Δεν απαιτούνται δικαιολογητικά για πλήση θητεία"; // Direct string comparison
+            const isFullService = documentsArray.length === 1 && documentsArray[0] === "Δεν απαιτούνται δικαιολογητικά για πλήρη θητεία"; // Direct string comparison
             if (!isExempt && !isFullService) {
                 document.getElementById('reducedServiceInfoBox').style.display = 'flex';
             } else {
@@ -880,7 +880,7 @@
             let serviceDescription = "";
             let calculatedBaseMonths = 12; // Default for full service
             let isBuyoutAttempted = buyout;
-            let fullServiceDocuments = ['Δεν απαιτούνται δικαιολογητικά για πλήση θητεία'];
+            let fullServiceDocuments = ['Δεν απαιτούνται δικαιολογητικά για πλήρη θητεία'];
             // --- Age Validation & Exemption for 45+ (Highest Priority) ---
             if (isNaN(age) || age < 18) {
                 displayResult(`<span class="error-highlight">Παρακαλώ εισάγετε έγκυρη ηλικία (τουλάχιστον 18 ετών).</span>`, [], buyout);
@@ -968,14 +968,14 @@
                     paymentInfo = `<br>Το ποσό των ${totalBuyoutCost}€ πρέπει να καταβληθεί σε ${paymentPeriods} δόσεις των ${paymentAmount}€ η καθεμία.`;
                     serviceDescription += paymentInfo;
                     // Set base documents for buyout scenario with correct order
-                    documents = ["Αίτηση εξαγοράς θητείας", "Αστυνομική ταυτότητα", "Αποδεικτικό πληρωμής ηλεκτρονικού παραβό"];
+                    documents = ["Αίτηση εξαγοράς θητείας", "Αστυνομική ταυτότητα", "Αποδεικτικό πληρωμής ηλεκτρονικού παραβόλου"];
                     // Add other specific documents based on selected options that affect buyout
                     if (qualifiesAsFR) {
                         // Removed "Αίτηση στη στρατολογία για μόνιμος κάτοικας εξωτερικού"
                         documents.push("Πιστοποιητικό μόνιμου κάτοικου εξωτερικού (ΜΚΕ) από την αρμόδια προξενική αρχή (ισχύει για έξι μήνες από την ημερομηνία έκδοσής του)");
                     }
                     if (over35) { // ADDED DOCUMENT FOR OVER35
-                        documents.push("Απόφαση εγγραφής στα Μητρώα Αρρένων");
+                        documents.push("Απόφαση εγγραφής στα Μητρώα Αρρένων/Δημοτολόγιο");
                     }
                     if (foreignMilitaryService) {
                         // UPDATED DOCUMENT TEXT HERE
@@ -1042,7 +1042,7 @@
             else if (over35) { // UPDATED DOCUMENTS FOR OVER35
                 serviceDescription = "Θητεία 6 μηνών λόγω ηλικίας (35+).";
                 calculatedBaseMonths = 6;
-                documents = ["Αίτηση", "Αστυνομική ταυτότητα", "Απόφαση εγγραφής στα Μητρώα Αρρένων"];
+                documents = ["Αίτηση", "Αστυνομική ταυτότητα", "Απόφαση εγγραφής στα Μητρώα Αρρένων/Δημοτολόγιο"];
             } else if (foreignMilitaryService) {
                 // Modified description for point 3
                 serviceDescription = "Θητεία 6 μηνών (λόγω υπηρεσίας σε ξένο στρατό εκτός ΝΑΤΟ/ΕΕ για τουλάχιστον 6 μήνες)";
