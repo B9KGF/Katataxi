@@ -2,7 +2,7 @@
 
 [![Status](https://img.shields.io/badge/Adoption-Hellenic_Army-005696.svg)]()
 [![Platform](https://img.shields.io/badge/Platform-Web-blue.svg)]()
-[![License](https://img.shields.io/badge/License-MIT-green.svg)]()
+[![License](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
 
 **Katataxi** is a client-side web tool designed to automate the classification process for new recruits in the Hellenic Army. It calculates military service duration, estimates buyout costs, and generates dynamic lists of required documentation based on current Greek legislation.
 
@@ -44,7 +44,7 @@ This project is built to be zero-dependency and portable.
 
 1.  Clone the repository:
     ```bash
-    git clone https://github.com/YOUR_USERNAME/katataxi.git
+    git clone https://github.com/B9KGF/katataxi.git
     ```
 2.  Open `index.html` in any modern web browser (Chrome, Edge, Firefox).
 
@@ -54,6 +54,7 @@ This project is built to be zero-dependency and portable.
 *   **Official Status:** This software has been handed off to the Hellenic Army (Artillery Training Center) for internal maintenance and integration.
 *   **Updates:** This public repository is **frozen** and will not receive updates regarding future changes in conscription legislation.
 *   **Liability:** This tool is for demonstration and portfolio purposes only. For official conscription calculations, always consult [stratologia.gr](https://www.stratologia.gr) or your local Conscription Service.
+*   **License & Usage:** This source code is released under the **GNU GPLv3** license to ensure transparency and credit. However, as the operational version is maintained by the Hellenic Army, this repository is intended primarily as a technical portfolio reference.
 
 ---
 _Developed by George Karathanasopoulos | 2025_
